@@ -36,6 +36,7 @@ int main(int argc, char const *argv[])
 
 
     
+    Rectangle ball(windowWidth / 2, windowHeight / 2, 300, 300);
     Draw::setRenderer(window.getRenderer());
 
     //MAIN GAME LOOPS
@@ -48,7 +49,10 @@ int main(int argc, char const *argv[])
         {
             std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
+            // SDL_SetRenderDrawColor(window.getRenderer(), 100, 100, 100, 255);
+            // SDL_RenderClear(window.getRenderer());
 
+            Draw::rect(ball.getRect(), 255, 255, 255);
             SDL_RenderPresent(window.getRenderer());
             while(SDL_PollEvent(&event))
             {
