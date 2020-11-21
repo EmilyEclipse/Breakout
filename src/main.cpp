@@ -49,17 +49,45 @@ int main(int argc, char const *argv[])
         {
             std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-            // SDL_SetRenderDrawColor(window.getRenderer(), 100, 100, 100, 255);
-            // SDL_RenderClear(window.getRenderer());
+            SDL_SetRenderDrawColor(window.getRenderer(), 100, 100, 100, 255);
+            SDL_RenderClear(window.getRenderer());
 
             Draw::rect(ball.getRect(), 255, 255, 255);
             SDL_RenderPresent(window.getRenderer());
+            
             while(SDL_PollEvent(&event))
             {
-                if(event.type == SDL_QUIT)
+                switch(event.type)
+                {
+                case SDL_QUIT:
                     gameRunning = false;
-            }
+                    break;
+            
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym)
+                    {
+                    case SDLK_UP:
+                    case SDLK_w: 
+                        ball.moveY(-5);
+                        break;
+                    
+                    case SDLK_s:
+                    case SDLK_DOWN:
+                        ball.moveY(5);
+                        break;
 
+                    case SDLK_a:
+                    case SDLK_LEFT:
+                        ball.moveX(-5);
+                        break;
+
+                    case SDLK_d:
+                    case SDLK_RIGHT:
+                        ball.moveX(5);
+                    }
+                    break; 
+                }
+            }
 
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();

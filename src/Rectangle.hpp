@@ -7,7 +7,10 @@ class Rectangle
 {
 public:
     Rectangle(short x, short y, short w, short h);
+
     SDL_Rect* getRect();
+    void moveX(short moveX);
+    void moveY(short moveY);
 private:
     SDL_Rect rect;
 };
