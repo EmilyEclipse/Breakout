@@ -5,6 +5,7 @@
 #include "Draw.hpp"
 #include "RenderWindow.hpp"
 #include "Rectangle.hpp"
+#include "Paddle.hpp"
 
 void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
                 const std::chrono::duration<int, std::milli>& interval)
@@ -36,7 +37,7 @@ int main(int argc, char const *argv[])
 
 
     
-    Rectangle ball(windowWidth / 2, windowHeight / 2, 300, 300);
+    Paddle paddle(windowWidth / 2, windowHeight / 2, 300, 30);
     Draw::setRenderer(window.getRenderer());
 
     //MAIN GAME LOOPS
@@ -52,7 +53,7 @@ int main(int argc, char const *argv[])
             SDL_SetRenderDrawColor(window.getRenderer(), 100, 100, 100, 255);
             SDL_RenderClear(window.getRenderer());
 
-            Draw::rect(ball.getRect(), 255, 255, 255);
+            Draw::rect(paddle.getRect(), 255, 255, 255);
             SDL_RenderPresent(window.getRenderer());
             
             while(SDL_PollEvent(&event))
@@ -66,24 +67,14 @@ int main(int argc, char const *argv[])
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym)
                     {
-                    case SDLK_UP:
-                    case SDLK_w: 
-                        ball.moveY(-5);
-                        break;
-                    
-                    case SDLK_s:
-                    case SDLK_DOWN:
-                        ball.moveY(5);
-                        break;
-
                     case SDLK_a:
                     case SDLK_LEFT:
-                        ball.moveX(-5);
+                        paddle.moveLeft(10);
                         break;
 
                     case SDLK_d:
                     case SDLK_RIGHT:
-                        ball.moveX(5);
+                        paddle.moveRight(10);
                     }
                     break; 
                 }

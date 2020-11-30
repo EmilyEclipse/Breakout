@@ -10,13 +10,23 @@ Rectangle::Rectangle(short x, short y, short w, short h)
     (*this).rect.h = h;
 }
 
-void Rectangle::moveX(short moveX){
-    (*this).rect.x += moveX;
+void Rectangle::setRectX(short value)
+{
+    this->rect.x = value;
 }
 
-void Rectangle::moveY(short moveY){
-    (*this).rect.y += moveY;
+void Rectangle::setRectY(short value)
+{
+    this->rect.y = value;
 }
+
+// void Rectangle::moveX(short moveX){
+//     (*this).rect.x += moveX;
+// }
+
+// void Rectangle::moveY(short moveY){
+//     (*this).rect.y += moveY;
+// }
 
 SDL_Rect* Rectangle::getRect()
 {
