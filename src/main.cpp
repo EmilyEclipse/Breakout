@@ -17,14 +17,6 @@ void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
     }
 }
 
-short calculateSpeed(short frameCount, short maxSpeed, short acceleration)
-{
-    short speed = frameCount * acceleration + acceleration;
-    if (speed <= maxSpeed)
-        return speed;
-    else return maxSpeed;
-}
-
 int main(int argc, char const *argv[])
 {
     const char* title = "BREAKOUT v0.1";
@@ -43,11 +35,6 @@ int main(int argc, char const *argv[])
     bool gameRunning = true;
     SDL_Event event;
     const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
-    short movementSpeed = 0;
-    short maxMovementSpeed = 10;
-    short movementFrameCount = 0;
-    bool moving = false;
-
 
     
     Paddle paddle(windowWidth / 2, 900, 300, 50);
@@ -80,24 +67,20 @@ int main(int argc, char const *argv[])
 
             //keyboard input
             {
-                movementSpeed = calculateSpeed(movementFrameCount, maxMovementSpeed, 2);
                 if(keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_A])
                 {
-                    paddle.moveLeft(movementSpeed);
-                    moving = true;
+                    paddle.moveLeft();
+                    paddle.setMoving(true);
                 }
 
                 if(keyboardState[SDL_SCANCODE_RIGHT] || keyboardState[SDL_SCANCODE_D])
                 {
-                    paddle.moveRight(movementSpeed);
-                    moving = true;
+                    paddle.moveRight();
+                    paddle.setMoving(true);
                 }
 
                 if(!keyboardState[SDL_SCANCODE_LEFT] && !keyboardState[SDL_SCANCODE_A] && !keyboardState[SDL_SCANCODE_RIGHT] && !keyboardState[SDL_SCANCODE_D])
-                    moving = false;
-                if(moving)
-                    ++movementFrameCount;
-                else  movementFrameCount = 0;
+                    paddle.setMoving(false);
             }
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
