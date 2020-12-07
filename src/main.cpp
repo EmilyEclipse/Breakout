@@ -6,6 +6,7 @@
 #include "RenderWindow.hpp"
 #include "Rectangle.hpp"
 #include "Paddle.hpp"
+#include "Keyboard.hpp"
 
 void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
                 const std::chrono::duration<int, std::milli>& interval)
@@ -34,10 +35,10 @@ int main(int argc, char const *argv[])
     const bool variableFPS = false;
     bool gameRunning = true;
     SDL_Event event;
-    const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 
     
     Paddle paddle(windowWidth / 2, 900, 300, 50);
+    Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
 
     //MAIN GAME LOOPS
@@ -65,23 +66,7 @@ int main(int argc, char const *argv[])
             Draw::rect(paddle.getRect(), 255, 255, 255);
             SDL_RenderPresent(window.getRenderer());
 
-            //keyboard input
-            {
-                if(keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_A])
-                {
-                    paddle.moveLeft();
-                    paddle.setMoving(true);
-                }
-
-                if(keyboardState[SDL_SCANCODE_RIGHT] || keyboardState[SDL_SCANCODE_D])
-                {
-                    paddle.moveRight();
-                    paddle.setMoving(true);
-                }
-
-                if(!keyboardState[SDL_SCANCODE_LEFT] && !keyboardState[SDL_SCANCODE_A] && !keyboardState[SDL_SCANCODE_RIGHT] && !keyboardState[SDL_SCANCODE_D])
-                    paddle.setMoving(false);
-            }
+            Keyboard::handleInput();
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<int, std::milli> timeFrameTookToRun = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end - start);

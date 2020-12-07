@@ -1,2 +1,5 @@
 *.o
 bin/
+make.nope
+include/Handler.hpp
+.vscode/
