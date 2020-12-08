@@ -11,8 +11,13 @@ public:
     SDL_Rect* getRect();
     void setRectX(short value);
     void setRectY(short value);
-    // void moveX(short moveX);
-    // void moveY(short moveY);
+    void setRectW(short value);
+    void setRectH(short value);
+
+    short getRectX();
+    short getRectY();
+    short getRectW();
+    short getRectH();
 private:
     SDL_Rect rect;
 };

@@ -20,10 +20,10 @@ void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
 
 int main(int argc, char const *argv[])
 {
-    const char* title = "BREAKOUT v0.1";
-    short windowWidth = 1920;
-    short windowHeight = 1080;
-    const unsigned short FPS = 60;
+    const char* title = "BREAKOUT v0.2";
+    Uint16 windowWidth = 1920;
+    Uint16 windowHeight = 1080;
+    const Uint8 FPS = 60;
     //expected time between frames(if computer is fast enough)
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
 
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
     SDL_Event event;
 
     
-    Paddle paddle(windowWidth / 2, 900, 300, 50);
+    Paddle paddle(windowWidth);
     Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
 
