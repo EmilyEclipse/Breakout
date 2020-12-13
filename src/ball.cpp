@@ -6,8 +6,8 @@
 
 Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle) 
             : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50){
-    xSpeed = 5;
-    ySpeed = 5;
+    xSpeed = 7;
+    ySpeed = 7;
     windowWidth = i_windowWidth;
     windowHeight = i_windowHeight;
     paddle = i_paddle;
@@ -60,10 +60,23 @@ void Ball::handleCollision(){
 }
 
 void Ball::calculateThetaForCollision(){
+
     if(pixelOfPaddle() == 0){
         theta = M_PI_2;
-    } else
+    } else if(abs(pixelOfPaddle()) < paddle->getRectW() / 4.0 * (1 - angleLimitSansPI))
         theta = M_PI_2 - M_PI * (static_cast<double>(pixelOfPaddle() - 1) / paddle->getRectW());
+    else{
+        if(pixelOfPaddle() > 0)
+            theta = M_PI * angleLimitSansPI;
+        else
+            theta = M_PI - M_PI * angleLimitSansPI;
+    }
+        
+
+    // if(pixelOfPaddle() == 0){
+    //     theta = M_PI_2;
+    // } else
+    //     theta = M_PI_2 - M_PI * (static_cast<double>(pixelOfPaddle() - 1) / paddle->getRectW());
 }
 
 
