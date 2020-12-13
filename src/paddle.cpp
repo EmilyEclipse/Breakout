@@ -39,6 +39,10 @@ bool Paddle::canMoveRight(){
         return true;
 }
 
+double Paddle::getCenterPointFromLeftEdge(){
+    return this->getRectX() + static_cast<double>(this->getRectW()) / 2;
+}
+
 
 
 short Paddle::calculateSpeed(short frameCount, short maxSpeed, short acceleration)

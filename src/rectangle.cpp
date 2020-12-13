@@ -47,5 +47,5 @@ short Rectangle::getRectH(){
 
 SDL_Rect* Rectangle::getRect()
 {
-    return &(*this).rect;
+    return &(this->rect);
 }

@@ -3,7 +3,7 @@ COMPILER_OPTIONS = -c -Wall -std=c++14 -m64 -g
 
 LINKER_OPTIONS =  -lSDL2main -lSDL2
 LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o obj/keyboard.o obj/paddle.o  \
-				obj/main.o
+				obj/main.o obj/ball.o
 				
 
 BREAKOUT: $(LINKER_FILES)
@@ -26,3 +26,6 @@ obj/paddle.o: src/paddle.cpp include/Paddle.hpp
 
 obj/keyboard.o: src/keyboard.cpp include/Keyboard.hpp
 	g++ $(COMPILER_INCLUDE) src/keyboard.cpp -o obj/keyboard.o $(COMPILER_OPTIONS)
+
+obj/ball.o: src/ball.cpp include/Ball.hpp
+	g++ $(COMPILER_INCLUDE) src/ball.cpp -o obj/ball.o $(COMPILER_OPTIONS)

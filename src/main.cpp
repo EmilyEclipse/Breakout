@@ -5,6 +5,7 @@
 #include "Draw.hpp"
 #include "RenderWindow.hpp"
 #include "Rectangle.hpp"
+#include "Ball.hpp"
 #include "Paddle.hpp"
 #include "Keyboard.hpp"
 
@@ -41,6 +42,8 @@ int main(int argc, char const *argv[])
     Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
 
+    Ball ball(&windowWidth, &windowHeight, &paddle);
+
     //MAIN GAME LOOPS
     if(variableFPS)
     {
@@ -60,13 +63,16 @@ int main(int argc, char const *argv[])
                 }
             }
 
+            Keyboard::handleInput();
+            ball.move();
+
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());
 
             Draw::rect(paddle.getRect(), 255, 255, 255);
+            Draw::rect(ball.getRect(), 255, 244, 79);
             SDL_RenderPresent(window.getRenderer());
 
-            Keyboard::handleInput();
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<int, std::milli> timeFrameTookToRun = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end - start);

@@ -15,6 +15,7 @@ public:
     void setMoving(bool isMoving);
     bool canMoveLeft();
     bool canMoveRight();
+    double getCenterPointFromLeftEdge();
 private:
     short maxMovementSpeed = 10;
     short acceleration = 2;
