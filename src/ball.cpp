@@ -4,10 +4,12 @@
 #include "Rectangle.hpp"
 #include "Paddle.hpp"
 
+
 Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle) 
             : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50){
     xSpeed = 7;
     ySpeed = 7;
+    magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
     windowWidth = i_windowWidth;
     windowHeight = i_windowHeight;
     paddle = i_paddle;
@@ -55,7 +57,6 @@ void Ball::handleCollision(){
     //Number of exit angles is 'paddle_width', plus another one for the paddle's center pixel
     //if the position of that pixel is an integer (otherwise it's just imaginary)
     calculateThetaForCollision();
-    calculateVectorMagnitude();
     polarToXY();
 }
 
@@ -71,12 +72,6 @@ void Ball::calculateThetaForCollision(){
         else
             theta = M_PI - M_PI * angleLimitSansPI;
     }
-        
-
-    // if(pixelOfPaddle() == 0){
-    //     theta = M_PI_2;
-    // } else
-    //     theta = M_PI_2 - M_PI * (static_cast<double>(pixelOfPaddle() - 1) / paddle->getRectW());
 }
 
 
@@ -102,11 +97,6 @@ bool Ball::collidesWithPaddle(){
             return true;
     }
     return false;
-}
-
-
-void Ball::calculateVectorMagnitude(){
-    magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
 }
 
 void Ball::polarToXY(){

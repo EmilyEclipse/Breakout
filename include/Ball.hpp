@@ -1,6 +1,8 @@
 #ifndef BALL_HPP
 #define BALL_HPP
 
+#include <fstream>
+
 #include <SDL2/SDL.h>
 
 #include "Rectangle.hpp"
@@ -27,11 +29,10 @@ private:
     double getCenterPointFromLeftEdge();
     int16_t pixelOfPaddle();
 
-    void calculateVectorMagnitude();
     void polarToXY();
 
-    int8_t xSpeed;
-    int8_t ySpeed;
+    double xSpeed;
+    double ySpeed;
     double angleLimitSansPI = 1 / 3.0;
     double magnitude;
     double theta;
