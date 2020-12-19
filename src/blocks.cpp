@@ -19,7 +19,7 @@ Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH
          Uint8 blockSpacingX, Uint16 *windowWidth,
          Uint8 red, Uint8 green, Uint8 blue)
 {
-    Uint8 blockW = calculateBlockWidth(*windowWidth, numberOfBlocks, startPosX, blockSpacingX);
+    Uint16 blockW = calculateBlockWidth(*windowWidth, numberOfBlocks, startPosX, blockSpacingX);
 
     //add blocks to row
     for(int i = 0; i < numberOfBlocks; ++i){
@@ -35,17 +35,17 @@ Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH
     this->rowCollider = container;
 }
 
-Uint8 Row::calculateBlockWidth(
+Uint16 Row::calculateBlockWidth(
     Uint16 windowWidth, Uint8 numberOfBlocks, Uint16 startPosX, Uint8 blockSpacingX){
     return (windowWidth - 2 * startPosX) / numberOfBlocks - blockSpacingX;
 }
 
 HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
 {
-    Uint16 blockH = 20;
-    Uint8 blockSpacingX = 10;
-    Uint8 blockSpacingY = 10;
-    Uint8 blocksPerRow = 5;
+    Uint16 blockH = 50;
+    Uint16 blockSpacingX = 15;
+    Uint16 blockSpacingY = 15;
+    Uint16 blocksPerRow = 5;
     
 
     //add rows to HyperBlock
@@ -59,7 +59,7 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
 
     for(Uint8 i = 0; i < rowColors.size(); ++i)
     {
-        Uint8 rowStartPosY = startPosY + i * (blockH + blockSpacingY);
+        Uint16 rowStartPosY = startPosY + i * (blockH + blockSpacingY);
         Row currentRow (blocksPerRow, startPosX, rowStartPosY, blockH, blockSpacingX,
                         windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
                         std::get<2>(rowColors[i]));
@@ -70,8 +70,8 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
     Uint8 nrOfColumns = this->elements.size();
 
     Uint16 rowWidth = *windowWidth - 2 * startPosX;
-    Uint16 rowHeight = (blockH + blockSpacingY) * nrOfColumns - blockSpacingY;
-    Rectangle collidingBox(startPosX, startPosY, rowWidth, rowHeight);
+    Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfColumns - blockSpacingY;
+    Rectangle collidingBox(startPosX, startPosY, rowWidth, colliderHeight);
     hyperblockCollider = collidingBox;
 
     
