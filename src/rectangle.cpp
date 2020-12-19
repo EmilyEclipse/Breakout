@@ -2,6 +2,13 @@
 
 #include "Rectangle.hpp"
 
+Rectangle::Rectangle(){
+    this->rect.x = 0;
+    this->rect.y = 0;
+    this->rect.w = 0;
+    this->rect.h = 0;
+}
+
 Rectangle::Rectangle(short x, short y, short w, short h)
 {
     this->rect.x = x;

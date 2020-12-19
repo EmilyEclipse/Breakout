@@ -7,6 +7,7 @@
 #include "Rectangle.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
+#include "HyperBlock.hpp"
 #include "Keyboard.hpp"
 
 void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
@@ -39,10 +40,12 @@ int main(int argc, char const *argv[])
 
     
     Paddle paddle(windowWidth);
+    Ball ball(&windowWidth, &windowHeight, &paddle);
+    HyperBlock hyperBlock(100, 50, &windowWidth);
+
     Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
 
-    Ball ball(&windowWidth, &windowHeight, &paddle);
 
     //MAIN GAME LOOPS
     if(variableFPS)
@@ -69,6 +72,7 @@ int main(int argc, char const *argv[])
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());
 
+            Draw::hyperBlock(&hyperBlock);
             Draw::rect(paddle.getRect(), 255, 255, 255);
             Draw::rect(ball.getRect(), 255, 244, 79);
             SDL_RenderPresent(window.getRenderer());

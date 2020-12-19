@@ -6,6 +6,7 @@
 class Rectangle
 {
 public:
+    Rectangle();
     Rectangle(short x, short y, short w, short h);
 
     SDL_Rect* getRect();
