@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 
+#include <tuple>
+
 #include "Block.hpp"
 #include "Row.hpp"
 #include "HyperBlock.hpp"
@@ -47,15 +49,22 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
     
 
     //add rows to HyperBlock
-    Row red     (blocksPerRow, 50, 50, blockH, blockSpacingX, windowWidth, 0xFF, 0x24, 0x00);
-    Row orange  (blocksPerRow, 50, 60, blockH, blockSpacingX, windowWidth, 0xFF, 0x9F, 0x00);
-    Row green   (blocksPerRow, 50, 70, blockH, blockSpacingX, windowWidth, 0x4C, 0xBB, 0x17);
-    Row blue    (blocksPerRow, 50, 80, blockH, blockSpacingX, windowWidth, 0x00, 0x73, 0xCF);
+    std::vector<std::tuple<Uint8, Uint8, Uint8>> rowColors = 
+        {
+            {0xFF, 0x24, 0x00}, //red
+            {0xFF, 0x9F, 0x00}, //orange
+            {0x4C, 0xBB, 0x17}, //green
+            {0x00, 0x73, 0xCF}  //blue
+        };
 
-    this->elements.push_back(red.elements);
-    this->elements.push_back(orange.elements);
-    this->elements.push_back(green.elements);
-    this->elements.push_back(blue.elements);
+    for(Uint8 i = 0; i < rowColors.size(); ++i)
+    {
+        Uint8 rowStartPosY = startPosY + i * (blockH + blockSpacingY);
+        Row currentRow (blocksPerRow, startPosX, rowStartPosY, blockH, blockSpacingX,
+                        windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
+                        std::get<2>(rowColors[i]));
+        this->elements.push_back(currentRow.elements);
+    }
 
     //make HyperBlock colliding box
     Uint8 nrOfColumns = this->elements.size();

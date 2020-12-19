@@ -20,7 +20,6 @@ void Draw::hyperBlock(HyperBlock* hyper)
             Block *currentBlock_p = &hyper->elements[row][col];
             Draw::rect(currentBlock_p->getRect(), currentBlock_p->red, currentBlock_p->green,
                        currentBlock_p->blue);
-            
         }
     }
 }
