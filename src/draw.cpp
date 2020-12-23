@@ -13,15 +13,9 @@ void Draw::rect(const SDL_Rect* rectangle, short red, short green, short blue)
 
 void Draw::hyperBlock(HyperBlock* hyper)
 {
-    for(Uint16 row = 0; row < hyper->elements.size(); ++row)
-    {
-        for(Uint16 col = 0; col < hyper->elements[row].size(); ++col)
-        {
-            Block *currentBlock_p = &hyper->elements[row][col];
-            Draw::rect(currentBlock_p->getRect(), currentBlock_p->red, currentBlock_p->green,
-                       currentBlock_p->blue);
-        }
-    }
+    for(auto row : hyper->elements)
+        for(auto block : row)
+            Draw::rect(block.getRect(), block.red, block.green, block.blue);
 }
 
 void Draw::setRenderer(SDL_Renderer* inputRenderer)

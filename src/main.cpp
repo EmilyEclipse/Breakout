@@ -68,6 +68,7 @@ int main(int argc, char const *argv[])
 
             Keyboard::handleInput();
             ball.move();
+            hyperBlock.handleCollisions(&ball);
 
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());
