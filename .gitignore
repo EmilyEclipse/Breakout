@@ -3,3 +3,4 @@ bin/
 make.nope
 include/Handler.hpp
 .vscode/
+workspace.code-workspace

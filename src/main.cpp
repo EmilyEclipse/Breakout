@@ -2,6 +2,10 @@
 #include <iostream>
 #include <chrono>
 
+#include <fstream>
+
+#include <gtest/gtest.h>
+
 #include "Draw.hpp"
 #include "RenderWindow.hpp"
 #include "Rectangle.hpp"
@@ -20,7 +24,7 @@ void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
     }
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
     const char* title = "BREAKOUT v0.2";
     Uint16 windowWidth = 1920;
@@ -28,6 +32,8 @@ int main(int argc, char const *argv[])
     const Uint8 FPS = 60;
     //expected time between frames(if computer is fast enough)
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
+
+    ::testing::InitGoogleTest(&argc, argv);
 
     if(SDL_Init(SDL_INIT_VIDEO) != 0)
         std::cerr << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
@@ -45,7 +51,6 @@ int main(int argc, char const *argv[])
 
     Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
-
 
     //MAIN GAME LOOPS
     if(variableFPS)
@@ -68,6 +73,9 @@ int main(int argc, char const *argv[])
 
             Keyboard::handleInput();
             ball.move();
+
+
+            
             hyperBlock.handleCollisions(&ball);
 
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
@@ -88,5 +96,5 @@ int main(int argc, char const *argv[])
 
     SDL_Quit();
 
-    return 0;
+    return RUN_ALL_TESTS();
 }

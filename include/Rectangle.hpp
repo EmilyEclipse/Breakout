@@ -10,6 +10,16 @@ public:
     Rectangle(short x, short y, short w, short h);
 
     SDL_Rect* getRect();
+
+    bool collidesRect(Rectangle *inputRect);
+    bool collidesUpDown(Rectangle *inputRectangle);
+    bool collidesLeftRight(Rectangle *inputRectangle);
+
+    Uint16 getTopEdge();
+    Uint16 getBottomEdge();
+    Uint16 getLeftEdge();
+    Uint16 getRightEdge();
+
     void setRectX(short value);
     void setRectY(short value);
     void setRectW(short value);
@@ -20,6 +30,7 @@ public:
     short getRectW();
     short getRectH();
 private:
+
     SDL_Rect rect;
 };
 
