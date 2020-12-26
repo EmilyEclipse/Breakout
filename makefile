@@ -1,10 +1,21 @@
-COMPILER_INCLUDE = -I include/ -I include/Displayed -I include/Displayed/Blocks#-I /home/EmilyEclipse/Projects/C++/BREAKOUT/include/
+COMPILER_INCLUDE = -I include/ -I include/Displayed -I include/Displayed/Blocks\
+					-I include/Util#-I /home/EmilyEclipse/Projects/C++/BREAKOUT/include/
 COMPILER_OPTIONS = -c -Wall -std=c++14 -m64 -g
 
 LINKER_OPTIONS =  -lSDL2main -lSDL2
 LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o obj/keyboard.o obj/paddle.o  \
 				obj/main.o obj/ball.o obj/blocks.o
-				
+
+TEST_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o obj/keyboard.o obj/paddle.o  \
+				obj/ball.o obj/blocks.o test/main.o
+
+TEST_LINKER_OPTIONS = $(LINKER_OPTIONS) -lpthread -lgtest
+
+UnitTests:	$(TEST_LINKER_FILES)
+	g++ $(TEST_LINKER_FILES) $(TEST_LINKER_OPTIONS) -o bin/debug/UnitTests
+
+test/main.o: test/main.cpp
+	g++ $(COMPILER_INCLUDE) test/main.cpp -o test/main.o $(COMPILER_OPTIONS)
 
 BREAKOUT: $(LINKER_FILES)
 	g++ $(LINKER_FILES) $(LINKER_OPTIONS) -o bin/debug/BREAKOUT

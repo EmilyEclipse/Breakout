@@ -2,10 +2,6 @@
 #include <iostream>
 #include <chrono>
 
-#include <fstream>
-
-#include <gtest/gtest.h>
-
 #include "Draw.hpp"
 #include "RenderWindow.hpp"
 #include "Rectangle.hpp"
@@ -23,8 +19,6 @@ int main(int argc, char *argv[])
     const Uint8 FPS = 60;
     //expected time between frames(if computer is fast enough)
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
-
-    ::testing::InitGoogleTest(&argc, argv);
 
     if(SDL_Init(SDL_INIT_VIDEO) != 0)
         std::cerr << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
@@ -87,5 +81,5 @@ int main(int argc, char *argv[])
 
     SDL_Quit();
 
-    return RUN_ALL_TESTS();
+    return 0;
 }

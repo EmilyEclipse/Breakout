@@ -7,8 +7,9 @@
 
 class Util {
 public:
-    void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
-                const std::chrono::duration<int, std::milli>& interval)
+    static void safeSleep(
+        const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
+        const std::chrono::duration<int, std::milli>& interval)
     {
         int timeToSkip = calculateSkip(timeFrameTookToRun, interval);
         if(timeToSkip > 0)
@@ -17,12 +18,11 @@ public:
         }
     }
 
-    int calculateSkip(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
-                const std::chrono::duration<int, std::milli>& interval)
+    static int calculateSkip(
+        const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
+        const std::chrono::duration<int, std::milli>& interval)
     {
         //assumes timeFrameTookToRun is not negative
         return (interval - timeFrameTookToRun).count();
     }
-
-  
 };
