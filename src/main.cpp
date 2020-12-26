@@ -13,16 +13,7 @@
 #include "Paddle.hpp"
 #include "HyperBlock.hpp"
 #include "Keyboard.hpp"
-
-void safeSleep(const std::chrono::duration<int, std::milli>& timeFrameTookToRun,
-                const std::chrono::duration<int, std::milli>& interval)
-{
-    int timeToSkip = (interval - timeFrameTookToRun).count();
-    if(timeToSkip > 0)
-    {
-        SDL_Delay(timeToSkip);
-    }
-}
+#include "Util.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -89,7 +80,7 @@ int main(int argc, char *argv[])
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<int, std::milli> timeFrameTookToRun = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end - start);
-            safeSleep(timeFrameTookToRun, interval);
+            Util::safeSleep(timeFrameTookToRun, interval);
         }
     }
     window.cleanUp();
