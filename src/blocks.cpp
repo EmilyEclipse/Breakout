@@ -88,10 +88,6 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
 //COLLISION HANDLING
 void HyperBlock::handleCollisions(Rectangle *collidingRect)
 {
-    std::fstream debug ("debug.txt", std::ios::app | std::ios::out);
-    debug << "handleCollisions called" << std::endl;
-    debug.close();
-
     bool collidedBlock = false;
 
     if(hyperblockCollider.collidesRect(collidingRect))
@@ -102,15 +98,7 @@ void HyperBlock::handleCollisions(Rectangle *collidingRect)
             {
                 if(elements[row][blockNr].collidesRect(collidingRect))
                 {
-                    std::fstream debug ("debug.txt", std::ios::app | std::ios::out);
-                    debug << "Collided block nr. " << blockNr <<
-                            ", row " << row << std::endl;
-                    debug.close();
-
-                    // if(std::find(elementsToDelete.begin(), elementsToDelete.end(),
-                    //    elements[row][blockNr]) == elementsToDelete.end())
                     elementsToDelete[row].push_back(blockNr);
-                    
                     collidedBlock = true;
                 }
                     
@@ -128,24 +116,17 @@ void HyperBlock::handleCollisions(Rectangle *collidingRect)
 
 void HyperBlock::handleRemoveElements()
 {
-    std::fstream debug ("debug.txt", std::fstream::app | std::fstream::out);
-    
     for(Uint64 rowNr = 0; rowNr != elementsToDelete.size(); ++rowNr)
     {
         vector<int> &deletionRow = elementsToDelete[rowNr];
         vector<Block> &row = elements[rowNr];
 
-        debug << "Row " << rowNr << " of elementsToDelete; " <<
-                deletionRow.size() << " blocks."<< std::endl;
-        
-
         for(auto index : deletionRow)
         {
-            std::iter_swap(row.begin() + index - 1, --row.end());
+            std::iter_swap(row.begin() + index, --row.end());
             row.pop_back();
         }
     }
-    debug.close();
 
     for(Uint16 row = 0; row != elementsToDelete.size(); ++row)
         elementsToDelete[row].clear();
