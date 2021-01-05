@@ -2,18 +2,23 @@
 
 #include <gtest/gtest.h>
 
-#include "Draw.hpp"
-#include "RenderWindow.hpp"
 #include "Rectangle.hpp"
-#include "Ball.hpp"
-#include "Paddle.hpp"
-#include "HyperBlock.hpp"
-#include "Keyboard.hpp"
-#include "Util.hpp"
+
+//RECTANGLE
+class RectangleTest : testing::Test
+{
+    Rectangle rect1(0, 0, 0, 0);
+};
+
+TEST_F(RectangleTest, CompletelyOverlapping)
+{
+
+}
 
 int main(int argc, char *argv[])
 {
     testing::InitGoogleTest(&argc, argv);
+    Rectangle rect1(0, 0, 0, 0);
 
     
 

@@ -4,10 +4,6 @@
 #include <tuple>
 #include <utility>
 
-#include <fstream>
-
-#include <gtest/gtest.h>
-
 #include "Block.hpp"
 #include "Row.hpp"
 #include "HyperBlock.hpp"
@@ -86,33 +82,33 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
 
 
 //COLLISION HANDLING
-void HyperBlock::handleCollisions(Rectangle *collidingRect)
-{
-    bool collidedBlock = false;
+// void HyperBlock::handleCollisions(Rectangle *collidingRect)
+// {
+//     bool collidedBlock = false;
 
-    if(hyperblockCollider.collidesRect(collidingRect))
-    {
-        for(Uint64 row = 0; row != this->elements.size(); ++row)
-        {
-            for(Uint64 blockNr = 0; blockNr != elements.at(row).size(); ++blockNr)
-            {
-                if(elements[row][blockNr].collidesRect(collidingRect))
-                {
-                    elementsToDelete[row].push_back(blockNr);
-                    collidedBlock = true;
-                }
+//     if(hyperblockCollider.collidesRect(collidingRect))
+//     {
+//         for(Uint64 row = 0; row != this->elements.size(); ++row)
+//         {
+//             for(Uint64 blockNr = 0; blockNr != elements.at(row).size(); ++blockNr)
+//             {
+//                 if(elements[row][blockNr].collidesRect(collidingRect))
+//                 {
+//                     elementsToDelete[row].push_back(blockNr);
+//                     collidedBlock = true;
+//                 }
                     
-            }
-        }
-    }  
+//             }
+//         }
+//     }  
 
-    if(collidedBlock)
-    {
-        handleRemoveElements();
-        collidedBlock = false;
-    }
+//     if(collidedBlock)
+//     {
+//         handleRemoveElements();
+//         collidedBlock = false;
+//     }
     
-}
+// }
 
 void HyperBlock::handleRemoveElements()
 {

@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
 
     
     Paddle paddle(windowWidth);
-    Ball ball(&windowWidth, &windowHeight, &paddle);
     HyperBlock hyperBlock(100, 50, &windowWidth);
+    Ball ball(&windowWidth, &windowHeight, &paddle, &hyperBlock);
 
     Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
@@ -58,10 +58,7 @@ int main(int argc, char *argv[])
 
             Keyboard::handleInput();
             ball.move();
-
-
             
-            hyperBlock.handleCollisions(&ball);
 
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());

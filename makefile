@@ -2,12 +2,13 @@ COMPILER_INCLUDE = -I include/ -I include/Displayed -I include/Displayed/Blocks\
 					-I include/Util#-I /home/EmilyEclipse/Projects/C++/BREAKOUT/include/
 COMPILER_OPTIONS = -c -Wall -std=c++14 -m64 -g
 
-LINKER_OPTIONS =  -lSDL2main -lSDL2
-LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o obj/keyboard.o obj/paddle.o  \
-				obj/main.o obj/ball.o obj/blocks.o
+BASE_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o \
+				obj/keyboard.o obj/paddle.o obj/ball.o obj/blocks.o obj/geometry.o
 
-TEST_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o obj/keyboard.o obj/paddle.o  \
-				obj/ball.o obj/blocks.o test/main.o
+LINKER_OPTIONS =  -lSDL2main -lSDL2
+LINKER_FILES = $(BASE_LINKER_FILES) obj/main.o
+
+TEST_LINKER_FILES = $(BASE_LINKER_FILES) test/main.o
 
 TEST_LINKER_OPTIONS = $(LINKER_OPTIONS) -lpthread -lgtest
 
@@ -43,3 +44,6 @@ obj/ball.o: src/ball.cpp include/Displayed/Ball.hpp
 
 obj/blocks.o: src/blocks.cpp include/Displayed/Blocks/*
 	g++ $(COMPILER_INCLUDE) src/blocks.cpp -o obj/blocks.o $(COMPILER_OPTIONS)
+
+obj/geometry.o: src/geometry.cpp include/Geometry.hpp
+	g++ $(COMPILER_INCLUDE) src/geometry.cpp -o obj/geometry.o $(COMPILER_OPTIONS)
