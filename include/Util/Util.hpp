@@ -25,22 +25,4 @@ public:
         //assumes timeFrameTookToRun is not negative
         return (interval - timeFrameTookToRun).count();
     }
-
-    static bool fltEqual(double d1, double d2)
-    {
-        const double epsilon = 10e-6;
-        return abs(d1 - d2) < epsilon;
-    }
-
-    static bool fltLessThan(double d1, double d2)
-    {
-        const double epsilon = 10e-6;
-        return d1 < d2 && abs(d1 - d2) > epsilon;
-    }
-
-    static bool fltGreaterThan(double d1, double d2)
-    {
-        const double epsilon = 10e-6;
-        return d1 > d2 && abs(d1 - d2) > epsilon;
-    }
 };

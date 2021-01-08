@@ -56,14 +56,12 @@ int main(int argc, char *argv[])
                 }
             }
 
-            SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
-            SDL_RenderClear(window.getRenderer());
-
             Keyboard::handleInput();
             ball.move();
 
 
-            
+            SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
+            SDL_RenderClear(window.getRenderer());
 
             Draw::hyperBlock(&hyperBlock);
             Draw::rect(paddle.getRect(), 255, 255, 255);
