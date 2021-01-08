@@ -20,10 +20,12 @@ public:
     Rectangle hyperblockCollider;
 
     void handleCollisions(Rectangle *collidingRect);
-    
-private:
+
     vector<vector<int>> elementsToDelete;
     void handleRemoveElements();
+    
+private:
+    
 };
 
 #endif //HYPERBLOCK_HPP

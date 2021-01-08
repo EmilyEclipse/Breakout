@@ -160,31 +160,48 @@ void Ball::handleScreenCollison()
 
 void Ball::handleBlockCollision()
 {
+    bool collidedBlock = false;
+
     if(this->collidesRect(hyper->hyperblockCollider))
-        for(auto row : hyper->elements)
-            for(auto block : row)
-                if(this->collidesRect(block))
-                {
-                    if(block.containsPoint(getTLPoint()) ||
-                        block.containsPoint(getTRPoint()))
-                    {   //top of ball collision
-                        if(ySpeed < 0)
-                            ySpeed *= -1;
-                    } else if (block.containsPoint(getBLPoint()) ||
-                        block.containsPoint(getBRPoint()))
-                    {   //bottom of ball collision
-                        if(ySpeed > 0)
-                            ySpeed *= -1;
-                    } else if(block.containsPoint(getTLPoint()) ||
-                        block.containsPoint(getBLPoint()))
-                    {   //left side of ball collision
-                        if(xSpeed < 0)
-                            xSpeed *= -1;
-                    } else if(block.containsPoint(getTLPoint()) ||
-                        block.containsPoint(getBLPoint()))
-                    {   //right side of ball collision
-                        if(xSpeed > 0)
-                            xSpeed *= -1;
+        for(Uint16 rowNr = 0; rowNr < hyper->elements.size(); ++rowNr)
+            {
+                auto& row = hyper->elements[rowNr];
+                for(Uint16 blockNr = 0; blockNr < row.size(); ++blockNr)
+                    {
+                        auto& block = row[blockNr];
+                        if(this->collidesRect(block))
+                        {
+                            if(block.containsPoint(getTLPoint()) ||
+                                block.containsPoint(getTRPoint()))
+                            {   //top of ball collision
+                                if(ySpeed < 0)
+                                    ySpeed *= -1;
+                            } else if (block.containsPoint(getBLPoint()) ||
+                                block.containsPoint(getBRPoint()))
+                            {   //bottom of ball collision
+                                if(ySpeed > 0)
+                                    ySpeed *= -1;
+                            } else if(block.containsPoint(getTLPoint()) ||
+                                block.containsPoint(getBLPoint()))
+                            {   //left side of ball collision
+                                if(xSpeed < 0)
+                                    xSpeed *= -1;
+                            } else if(block.containsPoint(getTLPoint()) ||
+                                block.containsPoint(getBLPoint()))
+                            {   //right side of ball collision
+                                if(xSpeed > 0)
+                                    xSpeed *= -1;
+                            }
+
+                            hyper->elementsToDelete[rowNr].push_back(blockNr);
+                            collidedBlock = true;
+                        }
                     }
                 }
+
+    if(collidedBlock)
+    {
+        hyper->handleRemoveElements();
+        collidedBlock = false;
+    }
 }
