@@ -15,36 +15,36 @@ public:
 
     SDL_Rect* getRect();
 
-    bool collidesRect(Rectangle *inputRect);
-    bool collidesUpDown(Rectangle *inputRectangle);
-    bool collidesLeftRight(Rectangle *inputRectangle);
+    bool collidesRect( Rectangle& inputRectangle);
+    bool collidesUpDown( Rectangle& inputRectangle);
+    bool collidesLeftRight( Rectangle& inputRectangle);
 
-    Uint16 getTopEdge();
-    Uint16 getBottomEdge();
-    Uint16 getLeftEdge();
-    Uint16 getRightEdge();
+    Sint32 getTopEdge() ;
+    Sint32 getBottomEdge() ;
+    Sint32 getLeftEdge() ;
+    Sint32 getRightEdge() ;
 
-    Line getTopLine();
-    Line getBottomLine();
-    Line getLeftLine();
-    Line getRightLine();
+    Line getTopLine() ;
+    Line getBottomLine() ;
+    Line getLeftLine() ;
+    Line getRightLine() ;
 
-    Point getTLPoint();
-    Point getTRPoint();
-    Point getBLPoint();
-    Point getBRPoint();
+    Point getTLPoint() ;
+    Point getTRPoint() ;
+    Point getBLPoint() ;
+    Point getBRPoint() ;
 
-    void setRectX(short value);
-    void setRectY(short value);
-    void setRectW(short value);
-    void setRectH(short value);
+    void setRectX(Sint32 value);
+    void setRectY(Sint32 value);
+    void setRectW(Sint32 value);
+    void setRectH(Sint32 value);
 
-    short getRectX();
-    short getRectY();
-    short getRectW();
-    short getRectH();
+    Sint32 getRectX() ;
+    Sint32 getRectY() ;
+    Sint32 getRectW() ;
+    Sint32 getRectH() ;
+
 private:
-
     SDL_Rect rect;
 };
 

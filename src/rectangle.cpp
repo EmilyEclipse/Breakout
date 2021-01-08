@@ -22,123 +22,126 @@ Rectangle::Rectangle(short x, short y, short w, short h)
 
 Rectangle::Rectangle(Point first, Point second)
 {
-    Uint16 absDiffX = abs(first.x - second.x);
-    Uint16 absDiffY = abs(first.y - second.y);
-    Uint16 rectX = std::max(first.x, second.x) - absDiffX;
-    Uint16 rectY = std::max(first.y, second.y) - absDiffY;
+    Uint32 absDiffX = abs(first.x - second.x);
+    Uint32 absDiffY = abs(first.y - second.y);
+    Sint32 rectX = std::min(first.x, second.x); //- absDiffX;
+    Sint32 rectY = std::min(first.y, second.y); //- absDiffY;
 
-    Rectangle(rectX, rectY, absDiffX, absDiffY);
+    this->rect.x = rectX;
+    this->rect.y = rectY;
+    this->rect.w = absDiffX;
+    this->rect.h = absDiffY;
 }
 
-bool Rectangle::collidesRect(Rectangle *inputRectangle)
+bool Rectangle::collidesRect( Rectangle& inputRectangle)
 {
     return collidesLeftRight(inputRectangle) && collidesUpDown(inputRectangle);
 }
 
-bool Rectangle::collidesUpDown(Rectangle *inputRectangle)
+bool Rectangle::collidesUpDown( Rectangle& inputRectangle)
 {
-    return this->getTopEdge() <= inputRectangle->getBottomEdge() &&
-           this->getBottomEdge() >= inputRectangle->getTopEdge();
+    return this->getTopEdge() <= inputRectangle.getBottomEdge() &&
+           this->getBottomEdge() >= inputRectangle.getTopEdge();
 }
 
-bool Rectangle::collidesLeftRight(Rectangle *inputRectangle)
+bool Rectangle::collidesLeftRight( Rectangle& inputRectangle)
 {
-    return this->getLeftEdge() <= inputRectangle->getRightEdge() &&
-           this->getRightEdge() >= inputRectangle->getLeftEdge();
+    return this->getLeftEdge() <= inputRectangle.getRightEdge() &&
+           this->getRightEdge() >= inputRectangle.getLeftEdge();
 }
 
-Line Rectangle::getTopLine()
+Line Rectangle::getTopLine() 
 {
     return Line(getTLPoint(), getTRPoint());
 }
 
-Line Rectangle::getBottomLine()
+Line Rectangle::getBottomLine() 
 {
     return Line(getBLPoint(), getBRPoint());
 }
 
-Line Rectangle::getLeftLine()
+Line Rectangle::getLeftLine() 
 {
     return Line(getTLPoint(), getBLPoint());
 }
 
-Line Rectangle::getRightLine()
+Line Rectangle::getRightLine() 
 {
     return Line(getTRPoint(), getBRPoint());
 }
 
 //EDGE getters
-Uint16 Rectangle::getTopEdge()
+Sint32 Rectangle::getTopEdge() 
 {
     return this->getRectY();
 }
 
-Uint16 Rectangle::getBottomEdge()
+Sint32 Rectangle::getBottomEdge() 
 {
     return this->getRectY() + this->getRectH();
 }
 
-Uint16 Rectangle::getLeftEdge()
+Sint32 Rectangle::getLeftEdge() 
 {
     return this->getRectX();
 }
 
-Uint16 Rectangle::getRightEdge()
+Sint32 Rectangle::getRightEdge() 
 {
     return this->getRectX() + this->getRectW();
 }
 
 //CORNER getters
-Point Rectangle::getTLPoint(){
+Point Rectangle::getTLPoint() {
     return Point(this->getRectX(), this->getRectY());
 }
 
-Point Rectangle::getTRPoint(){
+Point Rectangle::getTRPoint() {
     return Point(this->getRectX() + this->getRectW(), this->getRectY());
 }
 
-Point Rectangle::getBLPoint(){
+Point Rectangle::getBLPoint() {
     return Point(this->getRectX(), this->getRectY() + this->getRectH());
 }
 
-Point Rectangle::getBRPoint(){
+Point Rectangle::getBRPoint() {
     return Point(this->getRectX() + this->getRectW(),
                     this->getRectY() + this->getRectH());
 }
 
 //X, Y, W, H setters
-void Rectangle::setRectX(short value)
+void Rectangle::setRectX(Sint32 value)
 {
     this->rect.x = value;
 }
 
-void Rectangle::setRectY(short value)
+void Rectangle::setRectY(Sint32 value)
 {
     this->rect.y = value;
 }
 
-void Rectangle::setRectW(short value){
+void Rectangle::setRectW(Sint32 value){
     this->rect.w = value;
 }
 
-void Rectangle::setRectH(short value){
+void Rectangle::setRectH(Sint32 value){
     this->rect.h = value;
 }
 
 //X, Y, W, H getters
-short Rectangle::getRectX(){
+Sint32 Rectangle::getRectX() {
     return this->rect.x;
 }
 
-short Rectangle::getRectY(){
+Sint32 Rectangle::getRectY() {
     return this->rect.y;
 }
 
-short Rectangle::getRectW(){
+Sint32 Rectangle::getRectW() {
     return this->rect.w;
 }
 
-short Rectangle::getRectH(){
+Sint32 Rectangle::getRectH() {
     return this->rect.h;
 }
 

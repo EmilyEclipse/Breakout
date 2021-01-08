@@ -25,12 +25,13 @@ private:
         }
     };
 
-    vector<RayIni> rays;
+    vector<RayIni> rayInis;
     enum raysEnum{TL = 0, TR, BL, BR};
 
     //object for collisions with walls, the ceiling, or the blocks
     struct GenericCollision{
-        Uint16 x, y, framesAhead;
+        Uint16 x, y;
+        double framesAhead;
         double originalDistance;
         Line intersectedLine;
         Uint8 cornerIndex;
@@ -100,12 +101,13 @@ private:
     void handleGenericCollision();
     
     void teleportBallByCorner(Uint8 cornerIndex, Uint16 x, Uint16 y);
+    void thetaFromXY();
 
     std::vector<Ray> collisionRays;
 
     double xSpeed;
     double ySpeed;
-    const double angleLimitSansPI = static_cast<double>(1 / 3);
+    const double angleLimitSansPI = static_cast<double>(1) / 3;
     double magnitude;
     double theta;
     Uint16 *windowWidth, *windowHeight;

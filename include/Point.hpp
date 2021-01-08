@@ -4,15 +4,9 @@
 
 class Point{
 public:
-    Uint16 x, y;
-    Point(){
-        this->x = 0;
-        this->y = 0;
-    }
-    Point(Uint16 i_x, Uint16 i_y){
-        this->x = i_x;
-        this->y = i_y;
-    }
+    Sint32 x, y;
+    Point() : x(0), y(0){}
+    Point(Sint32 i_x, Sint32 i_y) : x(i_x), y(i_y) {}
 
     bool operator == (const Point& rhs){
         return 

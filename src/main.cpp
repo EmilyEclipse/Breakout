@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     const char* title = "BREAKOUT v0.2";
     Uint16 windowWidth = 1920;
     Uint16 windowHeight = 1080;
-    const Uint8 FPS = 60;
+    const Uint8 FPS = 20;
     //expected time between frames(if computer is fast enough)
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     
     Paddle paddle(windowWidth);
-    HyperBlock hyperBlock(100, 50, &windowWidth);
+    HyperBlock hyperBlock(100, 150, &windowWidth);
     Ball ball(&windowWidth, &windowHeight, &paddle, &hyperBlock);
 
     Keyboard::setPaddle(&paddle);
@@ -56,18 +56,20 @@ int main(int argc, char *argv[])
                 }
             }
 
-            Keyboard::handleInput();
-            ball.move();
-            
-
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());
+
+            Keyboard::handleInput();
+            ball.move();
+
+
+            
 
             Draw::hyperBlock(&hyperBlock);
             Draw::rect(paddle.getRect(), 255, 255, 255);
             Draw::rect(ball.getRect(), 255, 244, 79);
             SDL_RenderPresent(window.getRenderer());
-
+            //SDL_Delay(1000);
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<int, std::milli> timeFrameTookToRun = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end - start);

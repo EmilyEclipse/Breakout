@@ -6,17 +6,22 @@
 #include "Rectangle.hpp"
 #include "Paddle.hpp"
 
+#include "Draw.hpp"
+
 
 Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
                 HyperBlock *i_hyper)
             : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50){
-    xSpeed = 7;
-    ySpeed = 7;
+    xSpeed = 0;
+    ySpeed = -7;
     magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
     windowWidth = i_windowWidth;
     windowHeight = i_windowHeight;
     paddle = i_paddle;
     hyper = i_hyper;
+    for(Uint8 i = 0; i < 4; ++i){
+        rayInis.emplace_back();
+    }
 }
 
 void Ball::move(){
@@ -63,6 +68,8 @@ void Ball::handlePaddleCollision(){
     //if the position of that pixel is an integer (otherwise it's just imaginary)
     calculateThetaForCollision();
     polarToXY();
+    predictCollisions();
+    letOnlyClosestCollision();
 }
 
 void Ball::calculateThetaForCollision(){
@@ -110,54 +117,58 @@ void Ball::polarToXY(){
 }
 
 void Ball::setNecessaryRaysOn(){
-    rays[TL].start = this->getTLPoint();
-    rays[TR].start = this->getTRPoint();
-    rays[BL].start = this->getBLPoint();
-    rays[BR].start = this->getBRPoint();
+    for(auto& rayIni : rayInis){
+        rayIni.toggle = false;
+    }
 
-    std::fill(rays.begin(), rays.end(), RayIni());
+    rayInis[TL].start = this->getTLPoint();
+    rayInis[TR].start = this->getTRPoint();
+    rayInis[BL].start = this->getBLPoint();
+    rayInis[BR].start = this->getBRPoint();
 
-    if((theta > 0 && theta < M_PI_2) || (theta > M_PI && theta < 3/4 * M_PI)){
+    thetaFromXY();
+
+    if((theta > 0 && theta < M_PI_2) || (theta > M_PI && theta < 3/2.0 * M_PI)){
         //first or third quadrant
-        rays[TL].toggle = true;
-        rays[BR].toggle = true;
+        rayInis[TL].toggle = true;
+        rayInis[BR].toggle = true;
     } else if ((theta > M_PI_2 && theta < M_PI) ||
-                (theta > 3/4 * M_PI && theta < M_2_PI)){
+                (theta > 3/2.0 * M_PI && theta < M_2_PI)){
         //second or fourth quadrant
-        rays[TR].toggle = true;
-        rays[BL].toggle = true;
+        rayInis[TR].toggle = true;
+        rayInis[BL].toggle = true;
     } else if (theta == 0 || theta == M_2_PI){
         //points to the right
-        rays[TR].toggle = true;
-        rays[BR].toggle = true;
+        rayInis[TR].toggle = true;
+        rayInis[BR].toggle = true;
     } else if (theta == M_PI_2){
         //points straight up
-        rays[TR].toggle = true;
-        rays[TL].toggle = true;
+        rayInis[TR].toggle = true;
+        rayInis[TL].toggle = true;
     } else if (theta == M_PI){
         //points to the left
-        rays[TL].toggle = true;
-        rays[BL].toggle = true;
-    } else if (theta == 3/4 * M_PI){
+        rayInis[TL].toggle = true;
+        rayInis[BL].toggle = true;
+    } else if (theta == 3/2.0 * M_PI){
         //points straight down
-        rays[BR].toggle = true;
-        rays[BL].toggle = true;
+        rayInis[BR].toggle = true;
+        rayInis[BL].toggle = true;
     }
 
     collisionRays.clear();
 
-    for(Uint8 i = 0; i < rays.size(); ++i){
-        if(rays[i].toggle){
-            collisionRays.emplace_back(
-                Line(rays[i].start, this->theta, *windowWidth, *windowHeight),
+    for(Uint8 i = 0; i < rayInis.size(); ++i){
+        if(rayInis[i].toggle){          
+            collisionRays.emplace_back(Ray(
+                Line(rayInis[i].start, this->theta, *windowWidth, *windowHeight),
                 i
-            );
+            ));
         }
     }
 }
 
 bool Ball::tryGetClosestCollidingLineOfRect(Line lin1, Rectangle &i_rect,
-        Line &intersectingLine, Line& intersectedLine){
+        Line& intersectingLine, Line& intersectedLine){
     bool found = false;
     intersectingLine = Line(Point(0,0), Point(0, 10000));
     intersectedLine = Line();
@@ -188,7 +199,7 @@ bool Ball::tryGetClosestCollidingLineOfRect(Line lin1, Rectangle &i_rect,
 bool Ball::tryIntersection(Line ray, Line rectLine, Line& currentShortest){
     if (Geometry::doSegmentsIntersect(ray, rectLine))
     {
-        if(currentShortest.getLength() < Geometry::getRayOriginToLineDistance(ray, rectLine))
+        if(currentShortest.getLength() > Geometry::getRayOriginToLineDistance(ray, rectLine))
         {
             currentShortest = Geometry::getOriginToIntersectionLine(ray, rectLine);
         }
@@ -204,6 +215,8 @@ void Ball::predictCollisions(){
     Rectangle window(0, 0, *windowWidth, *windowHeight);
 
     predictions.clear();
+
+    setNecessaryRaysOn();
 
     for(auto ray : collisionRays)
     {
@@ -276,6 +289,11 @@ void Ball::handleGenericCollision(){
         if(prediction.framesAhead >= 1)
         {
             --prediction.framesAhead;
+            Rectangle collRect(prediction.x, prediction.y, 20, 20);
+            Draw::rect(collRect.getRect(), 255, 0, 255);
+            Draw::line(prediction.intersectedLine, 255, 0, 0);
+            Draw::line(collisionRays[0].line, 0, 255, 0);
+            Draw::line(collisionRays[1].line, 0, 255, 0);
         } else {
             //doing the actual collision
             polarToXY();
@@ -286,7 +304,7 @@ void Ball::handleGenericCollision(){
             }
 
             //teleport the ball in the appropriate spot
-            teleportBallByCorner(prediction.cornerIndex, prediction.x, prediction.y);
+            //teleportBallByCorner(prediction.cornerIndex, prediction.x, prediction.y);
             predictions.clear();
         }
     }
@@ -309,4 +327,9 @@ void Ball::teleportBallByCorner(Uint8 cornerIndex, Uint16 x, Uint16 y)
         this->setRectX(x - this->getRectW());
         this->setRectY(y - this->getRectH());
     }
+}
+
+void Ball::thetaFromXY()
+{
+    this->theta = atan2(-ySpeed, xSpeed);
 }

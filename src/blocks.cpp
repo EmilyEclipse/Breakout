@@ -42,6 +42,8 @@ Uint16 Row::calculateBlockWidth(
     return (windowWidth - 2 * startPosX) / numberOfBlocks - blockSpacingX;
 }
 
+HyperBlock::HyperBlock(){}
+
 HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
 {
     Uint16 blockH = 50;

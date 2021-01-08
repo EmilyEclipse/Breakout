@@ -12,7 +12,9 @@ using std::vector;
 
 class HyperBlock{
 public:
+    HyperBlock();
     HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth);
+
     vector<vector<Block>> elements;
 
     Rectangle hyperblockCollider;

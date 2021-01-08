@@ -13,24 +13,28 @@ public:
         second = Point();
     }
 
-    Line(Point i_a, Point i_b){
-        this->first = i_a;
-        this->second = i_b;
-    }
+    Line(Point i_a, Point i_b) : first(i_a), second(i_b) {}
 
     Line(Point start, double heading, double magnitude){
         Uint16 offX = magnitude * cos(heading);
         Uint16 offY = -magnitude * sin(heading);
 
         Point finish(start.x + offX, start.y + offY);
-        Line(start, finish);
+        this->first = start;
+        this->second = finish;
     }
 
-    Line(Point start, double heading, Uint16 windowWidth, Uint16 windowHeight){
-        Uint16 maxLength = sqrt(windowWidth * windowWidth +
-                                windowHeight * windowHeight) + 10;
+    Line(Point start, double heading, Uint16 windowWidth, Uint16 windowHeight)
+    {
+        Sint32 maxLength = sqrt(windowWidth * windowWidth +
+                                windowHeight * windowHeight) + 1000;
 
-        Line(start, heading, maxLength);
+        Sint32 offX = maxLength * cos(heading);
+        Sint32 offY = -maxLength * sin(heading);
+
+        Point finish(start.x + offX, start.y + offY);
+        this->first = start;
+        this->second = finish;
     }
 
     bool isVertical(){
@@ -39,6 +43,11 @@ public:
 
     bool isHorizontal(){
         return first.y == second.y;
+    }
+
+    void orderPointsByX(){
+        if(this->first.x > this->second.x)
+            std::swap(this->first, this->second);
     }
 
     double getLength(){

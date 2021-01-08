@@ -25,6 +25,13 @@ public:
     static void normalizeLinesByX(Line &lin1, Line &lin2);
     static void normalizeLinesByY(Line &lin1, Line &lin2);
 
+    static void rotate90DegCCW(Point& input);
+    static void rotate90DegCCW(Line& input);
+    static void rotate180Deg(Point& input);
+    static void rotate180Deg(Line& input);
+    static void rotate270DegCCW(Point& input);
+    static void rotate270DegCCW(Line& input);
+
 private:
     static void handleSlopedLine(Line slopedLine, Point &interFirst, Point &interSecond);
 
