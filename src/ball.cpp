@@ -5,6 +5,7 @@
 #include "Ball.hpp"
 #include "Rectangle.hpp"
 #include "Paddle.hpp"
+#include "Util.hpp"
 
 #include "Draw.hpp"
 
@@ -127,29 +128,31 @@ void Ball::setNecessaryRaysOn(){
     rayInis[BR].start = this->getBRPoint();
 
     thetaFromXY();
+    Geometry::normalizeAngleRad(theta);
 
-    if((theta > 0 && theta < M_PI_2) || (theta > M_PI && theta < 3/2.0 * M_PI)){
+    if((Util::fltGreaterThan(theta, 0) && Util::fltLessThan(theta, M_PI_2)) || 
+        (Util::fltGreaterThan(theta, M_PI) && Util::fltLessThan(theta, 3/2.0 * M_PI))){
         //first or third quadrant
         rayInis[TL].toggle = true;
         rayInis[BR].toggle = true;
-    } else if ((theta > M_PI_2 && theta < M_PI) ||
-                (theta > 3/2.0 * M_PI && theta < M_2_PI)){
+    } else if ((Util::fltGreaterThan(theta, M_PI_2) && Util::fltLessThan(theta, M_PI)) ||
+                (Util::fltGreaterThan(theta, 3/2.0 * M_PI) && Util::fltLessThan(theta, 2 * M_PI))){
         //second or fourth quadrant
         rayInis[TR].toggle = true;
         rayInis[BL].toggle = true;
-    } else if (theta == 0 || theta == M_2_PI){
+    } else if (Util::fltEqual(theta, 0)){ //|| Util::fltEqual(theta, 2 * M_PI)){
         //points to the right
         rayInis[TR].toggle = true;
         rayInis[BR].toggle = true;
-    } else if (theta == M_PI_2){
+    } else if (Util::fltEqual(theta, M_PI_2)){
         //points straight up
         rayInis[TR].toggle = true;
         rayInis[TL].toggle = true;
-    } else if (theta == M_PI){
+    } else if (Util::fltEqual(theta, M_PI)){
         //points to the left
         rayInis[TL].toggle = true;
         rayInis[BL].toggle = true;
-    } else if (theta == 3/2.0 * M_PI){
+    } else if (Util::fltEqual(theta, 3/2.0 * M_PI)){
         //points straight down
         rayInis[BR].toggle = true;
         rayInis[BL].toggle = true;
@@ -306,6 +309,8 @@ void Ball::handleGenericCollision(){
             //teleport the ball in the appropriate spot
             //teleportBallByCorner(prediction.cornerIndex, prediction.x, prediction.y);
             predictions.clear();
+            predictCollisions();
+            letOnlyClosestCollision();
         }
     }
 }

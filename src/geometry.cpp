@@ -387,3 +387,13 @@ void Geometry::rotate270DegCCW(Line& input)
     rotate270DegCCW(input.first);
     rotate270DegCCW(input.second);
 }
+
+void Geometry::normalizeAngleRad(double& theta)
+{
+    const double Math2PI = 2 * M_PI;
+    theta = fmod(theta, Math2PI); //makes theta be in interval (-2pi, 2pi)
+    if(theta < 0)
+    {
+        theta = 2 * M_PI + theta;
+    }
+}

@@ -32,6 +32,8 @@ public:
     static void rotate270DegCCW(Point& input);
     static void rotate270DegCCW(Line& input);
 
+    static void normalizeAngleRad(double& theta);
+
 private:
     static void handleSlopedLine(Line slopedLine, Point &interFirst, Point &interSecond);
 
