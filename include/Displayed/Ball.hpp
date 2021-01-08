@@ -34,6 +34,9 @@ private:
     void teleportBallByCorner(Uint8 cornerIndex, Uint16 x, Uint16 y);
     void thetaFromXY();
 
+    void handleScreenCollison();
+    void handleBlockCollision();
+
     double xSpeed;
     double ySpeed;
     const double angleLimitSansPI = static_cast<double>(1) / 3;

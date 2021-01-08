@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     const char* title = "BREAKOUT v0.2";
     Uint16 windowWidth = 1920;
     Uint16 windowHeight = 1080;
-    const Uint8 FPS = 20;
+    const Uint8 FPS = 60;
     //expected time between frames(if computer is fast enough)
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
 

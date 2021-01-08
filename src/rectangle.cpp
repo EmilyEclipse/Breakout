@@ -50,6 +50,16 @@ bool Rectangle::collidesLeftRight( Rectangle& inputRectangle)
            this->getRightEdge() >= inputRectangle.getLeftEdge();
 }
 
+bool Rectangle::containsPoint(const Point& inputPoint)
+{
+    return  this->getLeftEdge() <= inputPoint.x &&
+            this->getRightEdge() >= inputPoint.x &&
+            this->getTopEdge() <= inputPoint.y &&
+            this->getBottomEdge() >= inputPoint.y;
+}
+
+
+
 Line Rectangle::getTopLine() 
 {
     return Line(getTLPoint(), getTRPoint());

@@ -20,7 +20,6 @@ Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
     windowHeight = i_windowHeight;
     paddle = i_paddle;
     hyper = i_hyper;
-    }
 }
 
 void Ball::move(){
@@ -30,6 +29,8 @@ void Ball::move(){
     // if(onTopEdge() || onBottomEdge()){
     //     ySpeed *= -1;
     // }
+    handleScreenCollison();
+    handleBlockCollision();
     if(this->collidesWithPaddle())
         handlePaddleCollision();
     moveX();
@@ -114,26 +115,76 @@ void Ball::polarToXY(){
 
 
 
-void Ball::teleportBallByCorner(Uint8 cornerIndex, Uint16 x, Uint16 y)
-{
-    switch(cornerIndex){
-    case TL:
-        this->setRectX(x);
-        this->setRectY(y);
-        break;
-    case TR:
-        this->setRectX(x - this->getRectW());
-        this->setRectY(y);
-    case BL:
-        this->setRectX(x);
-        this->setRectY(y - this->getRectH());
-    case BR:
-        this->setRectX(x - this->getRectW());
-        this->setRectY(y - this->getRectH());
-    }
-}
+// void Ball::teleportBallByCorner(Uint8 cornerIndex, Uint16 x, Uint16 y)
+// {
+//     switch(cornerIndex){
+//     case TL:
+//         this->setRectX(x);
+//         this->setRectY(y);
+//         break;
+//     case TR:
+//         this->setRectX(x - this->getRectW());
+//         this->setRectY(y);
+//     case BL:
+//         this->setRectX(x);
+//         this->setRectY(y - this->getRectH());
+//     case BR:
+//         this->setRectX(x - this->getRectW());
+//         this->setRectY(y - this->getRectH());
+//     }
+// }
 
 void Ball::thetaFromXY()
 {
     this->theta = atan2(-ySpeed, xSpeed);
+}
+
+void Ball::handleScreenCollison()
+{
+    if(this->onLeftEdge())
+        if(xSpeed < 0)
+            xSpeed *= -1;
+    
+    if(this->onRightEdge())
+        if(xSpeed > 0)
+            xSpeed *= -1;
+    
+    if(this->onTopEdge())
+        if(ySpeed < 0)
+            ySpeed *= -1;
+
+    if(this->onBottomEdge())
+        if(ySpeed > 0)
+            ySpeed *= -1;
+}
+
+void Ball::handleBlockCollision()
+{
+    if(this->collidesRect(hyper->hyperblockCollider))
+        for(auto row : hyper->elements)
+            for(auto block : row)
+                if(this->collidesRect(block))
+                {
+                    if(block.containsPoint(getTLPoint()) ||
+                        block.containsPoint(getTRPoint()))
+                    {   //top of ball collision
+                        if(ySpeed < 0)
+                            ySpeed *= -1;
+                    } else if (block.containsPoint(getBLPoint()) ||
+                        block.containsPoint(getBRPoint()))
+                    {   //bottom of ball collision
+                        if(ySpeed > 0)
+                            ySpeed *= -1;
+                    } else if(block.containsPoint(getTLPoint()) ||
+                        block.containsPoint(getBLPoint()))
+                    {   //left side of ball collision
+                        if(xSpeed < 0)
+                            xSpeed *= -1;
+                    } else if(block.containsPoint(getTLPoint()) ||
+                        block.containsPoint(getBLPoint()))
+                    {   //right side of ball collision
+                        if(xSpeed > 0)
+                            xSpeed *= -1;
+                    }
+                }
 }

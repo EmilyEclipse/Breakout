@@ -18,6 +18,7 @@ public:
     bool collidesRect( Rectangle& inputRectangle);
     bool collidesUpDown( Rectangle& inputRectangle);
     bool collidesLeftRight( Rectangle& inputRectangle);
+    bool containsPoint(const Point& inputPoint);
 
     Sint32 getTopEdge() ;
     Sint32 getBottomEdge() ;
