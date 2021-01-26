@@ -20,6 +20,16 @@ Rectangle::Rectangle(short x, short y, short w, short h)
     this->rect.h = h;
 }
 
+Rectangle::Rectangle(short x, short y, short w, short h, Sint16 i_layer,
+                    Uint8 i_red, Uint8 i_green, Uint8 i_blue)
+: layer(i_layer), red(i_red), green(i_green), blue(i_blue)
+{
+    this->rect.x = x;
+    this->rect.y = y;
+    this->rect.w = w;
+    this->rect.h = h;
+}
+
 Rectangle::Rectangle(Point first, Point second)
 {
     Uint32 absDiffX = abs(first.x - second.x);
@@ -155,7 +165,36 @@ Sint32 Rectangle::getRectH() {
     return this->rect.h;
 }
 
-SDL_Rect* Rectangle::getRect()
-{
-    return &(this->rect);
+Uint8 Rectangle::getRed() const{
+    return this->red;
+}
+
+Uint8 Rectangle::getGreen() const{
+    return this->green;
+}
+
+Uint8 Rectangle::getBlue() const{
+    return this->blue;
+}
+
+
+Rectangle* Rectangle::getRectangle(){
+    return this;
+}
+
+const SDL_Rect* Rectangle::getRect() const {
+    const SDL_Rect * p_rect = &(this->rect);
+    return p_rect;
+}
+
+Sint32 Rectangle::getLayer() const{
+    return this->layer;
+}
+
+Uint32 Rectangle::getID() const{
+    return this->id;
+}
+
+void Rectangle::setID(Uint32 input) {
+    this->id = input;
 }

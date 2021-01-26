@@ -3,6 +3,7 @@
 #include <chrono>
 
 #include "Draw.hpp"
+#include "DrawRegistry.hpp"
 #include "RenderWindow.hpp"
 #include "Rectangle.hpp"
 #include "Ball.hpp"
@@ -29,10 +30,19 @@ int main(int argc, char *argv[])
     bool gameRunning = true;
     SDL_Event event;
 
+    DrawRegistry drawReg;
     
     Paddle paddle(windowWidth);
-    HyperBlock hyperBlock(100, 150, &windowWidth);
+    HyperBlock hyperBlock(100, 150, &windowWidth, drawReg);
     Ball ball(&windowWidth, &windowHeight, &paddle, &hyperBlock);
+
+    drawReg.RegisterElement(paddle.getRectangle());
+    drawReg.RegisterElement(ball.getRectangle());
+    
+    for(auto row : hyperBlock.elements)
+        for(auto block : row)
+            drawReg.RegisterElement(block.getRectangle());
+
 
     Keyboard::setPaddle(&paddle);
     Draw::setRenderer(window.getRenderer());
@@ -63,11 +73,8 @@ int main(int argc, char *argv[])
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());
 
-            Draw::hyperBlock(&hyperBlock);
-            Draw::rect(paddle.getRect(), 255, 255, 255);
-            Draw::rect(ball.getRect(), 255, 244, 79);
+            drawReg.DrawElements();
             SDL_RenderPresent(window.getRenderer());
-            //SDL_Delay(1000);
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<int, std::milli> timeFrameTookToRun = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end - start);

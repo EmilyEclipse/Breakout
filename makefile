@@ -3,9 +3,10 @@ COMPILER_INCLUDE = -I include/ -I include/Displayed -I include/Displayed/Blocks\
 COMPILER_OPTIONS = -c -Wall -std=c++14 -m64 -g
 
 BASE_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o \
-				obj/keyboard.o obj/paddle.o obj/ball.o obj/blocks.o obj/geometry.o
+				obj/keyboard.o obj/paddle.o obj/ball.o obj/blocks.o obj/geometry.o \
+				obj/drawregistry.o
 
-LINKER_OPTIONS =  -lSDL2main -lSDL2
+LINKER_OPTIONS =  -lSDL2main -lSDL2 -lSDL2_ttf
 LINKER_FILES = $(BASE_LINKER_FILES) obj/main.o
 
 TEST_LINKER_FILES = $(BASE_LINKER_FILES) test/main.o
@@ -47,3 +48,6 @@ obj/blocks.o: src/blocks.cpp include/Displayed/Blocks/*
 
 obj/geometry.o: src/geometry.cpp include/Geometry.hpp
 	g++ $(COMPILER_INCLUDE) src/geometry.cpp -o obj/geometry.o $(COMPILER_OPTIONS)
+
+obj/drawregistry.o: src/drawregistry.cpp include/DrawRegistry.hpp
+	g++ $(COMPILER_INCLUDE) src/drawregistry.cpp -o obj/drawregistry.o $(COMPILER_OPTIONS)

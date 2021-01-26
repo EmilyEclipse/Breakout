@@ -11,8 +11,9 @@
 
 
 Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-                HyperBlock *i_hyper)
-            : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50){
+            HyperBlock *i_hyper)
+    : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50, 0, 0xFF, 0xF4, 0x4F)
+{
     xSpeed = 7;
     ySpeed = -7;
     magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);

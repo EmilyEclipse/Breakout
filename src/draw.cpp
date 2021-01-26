@@ -2,9 +2,17 @@
 
 #include "Draw.hpp"
 
+#include "HyperBlock.hpp"
+
 SDL_Renderer* Draw::renderer;
 
-void Draw::rect(SDL_Rect* rectangle, const Uint8 red, const Uint8 green,
+void Draw::draw(const Rectangle& rectangle)
+{
+    draw(rectangle.getRect(), rectangle.getRed(),
+    rectangle.getGreen(), rectangle.getBlue());
+}
+
+void Draw::draw(const SDL_Rect* rectangle, const Uint8 red, const Uint8 green,
     const Uint8 blue)
 {
     SDL_SetRenderDrawColor(Draw::renderer, red, green, blue, 255);
@@ -12,14 +20,15 @@ void Draw::rect(SDL_Rect* rectangle, const Uint8 red, const Uint8 green,
     SDL_RenderFillRect(Draw::renderer, rectangle);
 }
 
-void Draw::hyperBlock(const HyperBlock* hyper)
-{
-    for(auto row : hyper->elements)
-        for(auto block : row)
-            Draw::rect(block.getRect(), block.red, block.green, block.blue);
-}
+// void Draw::draw(const HyperBlock* hyper)
+// {
+//     for(auto row : hyper->elements)
+//         for(auto block : row)
+//             Draw::draw(block.getRect(),
+//                         block.getRed(), block.getGreen(), block.getBlue());
+// }
 
-void Draw::line(const Line line, const Uint8 red,
+void Draw::draw(const Line line, const Uint8 red,
         const Uint8 green, const Uint8 blue)
 {
     SDL_SetRenderDrawColor(Draw::renderer, red, green, blue, 255);

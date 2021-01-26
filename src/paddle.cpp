@@ -4,9 +4,11 @@
 #include "Rectangle.hpp"
 #include "RenderWindow.hpp"
 
-Paddle::Paddle(Uint16 windowWidth) : Rectangle(windowWidth / 2, 1000, 300, 50){
-    this->leftLimit = 0;
-    this->rightLimit = windowWidth - getRectW();
+Paddle::Paddle(Uint16 windowWidth)
+    :   Rectangle(windowWidth / 2, 1000, 300, 50, 20, 255, 255, 255),
+        leftLimit(0), rightLimit(windowWidth - getRectW())
+{
+
 }
 
 void Paddle::moveLeft(){

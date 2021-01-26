@@ -7,15 +7,12 @@
 #include "Block.hpp"
 #include "Row.hpp"
 #include "HyperBlock.hpp"
+#include "DrawRegistry.hpp"
 
-Block::Block(Uint16 x, Uint16 y, Uint16 w, Uint16 h, uint8_t red, uint8_t green,
-        uint8_t blue)
-        : Rectangle(x, y, w, h)
-{
-    this->red = red;
-    this->green = green;
-    this->blue = blue;
-}
+Block::Block(Uint16 x, Uint16 y, Uint16 w, Uint16 h,
+    Uint8 red, Uint8 green, Uint8 blue)
+    : Rectangle(x, y, w, h, 20, red, green, blue)
+{}
 
 Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH,
          Uint8 blockSpacingX, Uint16 *windowWidth,
@@ -44,7 +41,9 @@ Uint16 Row::calculateBlockWidth(
 
 HyperBlock::HyperBlock(){}
 
-HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
+HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
+    DrawRegistry& i_drawReg)
+    : drawReg(&i_drawReg)
 {
     Uint16 blockH = 50;
     Uint16 blockSpacingX = 15;
@@ -82,36 +81,6 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
     hyperblockCollider = collidingBox;
 }
 
-
-//COLLISION HANDLING
-// void HyperBlock::handleCollisions(Rectangle *collidingRect)
-// {
-//     bool collidedBlock = false;
-
-//     if(hyperblockCollider.collidesRect(collidingRect))
-//     {
-//         for(Uint64 row = 0; row != this->elements.size(); ++row)
-//         {
-//             for(Uint64 blockNr = 0; blockNr != elements.at(row).size(); ++blockNr)
-//             {
-//                 if(elements[row][blockNr].collidesRect(collidingRect))
-//                 {
-//                     elementsToDelete[row].push_back(blockNr);
-//                     collidedBlock = true;
-//                 }
-                    
-//             }
-//         }
-//     }  
-
-//     if(collidedBlock)
-//     {
-//         handleRemoveElements();
-//         collidedBlock = false;
-//     }
-    
-// }
-
 void HyperBlock::handleRemoveElements()
 {
     for(Uint64 rowNr = 0; rowNr != elementsToDelete.size(); ++rowNr)
@@ -121,7 +90,9 @@ void HyperBlock::handleRemoveElements()
 
         for(auto index : deletionRow)
         {
-            std::iter_swap(row.begin() + index, --row.end());
+            auto elementToDeletePos = row.begin() + index;
+            drawReg->UnregisterElement(elementToDeletePos->getRectangle());
+            std::iter_swap(elementToDeletePos, --row.end());
             row.pop_back();
         }
     }

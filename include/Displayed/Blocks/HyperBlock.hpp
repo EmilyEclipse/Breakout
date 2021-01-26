@@ -7,25 +7,26 @@
 
 #include "Block.hpp"
 #include "Rectangle.hpp"
+#include "DrawRegistry.hpp"
 
 using std::vector;
 
 class HyperBlock{
 public:
     HyperBlock();
-    HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth);
-
-    vector<vector<Block>> elements;
+    HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
+        DrawRegistry& drawReg);
+    
+    void handleCollisions(Rectangle *collidingRect);
+    void handleRemoveElements();
 
     Rectangle hyperblockCollider;
-
-    void handleCollisions(Rectangle *collidingRect);
-
+    vector<vector<Block>> elements;
     vector<vector<int>> elementsToDelete;
-    void handleRemoveElements();
+    
     
 private:
-    
+    DrawRegistry * drawReg;
 };
 
 #endif //HYPERBLOCK_HPP
