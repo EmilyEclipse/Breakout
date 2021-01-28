@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "Drawable.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
 
@@ -17,15 +16,15 @@ public:
 
     const SDL_Rect* getRect() const;
 
-    bool collidesRect( Rectangle& inputRectangle);
-    bool collidesUpDown( Rectangle& inputRectangle);
-    bool collidesLeftRight( Rectangle& inputRectangle);
-    bool containsPoint(const Point& inputPoint);
+    bool collidesRect(const Rectangle& inputRectangle) const;
+    bool collidesUpDown(const Rectangle& inputRectangle)const;
+    bool collidesLeftRight(const Rectangle& inputRectangle) const;
+    bool containsPoint(const Point& inputPoint) const;
 
-    Sint32 getTopEdge() ;
-    Sint32 getBottomEdge() ;
-    Sint32 getLeftEdge() ;
-    Sint32 getRightEdge() ;
+    Sint32 getTopEdge() const;
+    Sint32 getBottomEdge() const;
+    Sint32 getLeftEdge() const;
+    Sint32 getRightEdge() const;
 
     Line getTopLine() ;
     Line getBottomLine() ;
@@ -42,10 +41,10 @@ public:
     void setRectW(Sint32 value);
     void setRectH(Sint32 value);
 
-    Sint32 getRectX() ;
-    Sint32 getRectY() ;
-    Sint32 getRectW() ;
-    Sint32 getRectH() ;
+    Sint32 getRectX() const;
+    Sint32 getRectY() const;
+    Sint32 getRectW() const;
+    Sint32 getRectH() const;
 
     Uint8 getRed() const;
     Uint8 getGreen() const;

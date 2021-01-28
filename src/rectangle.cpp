@@ -43,24 +43,24 @@ Rectangle::Rectangle(Point first, Point second)
     this->rect.h = absDiffY;
 }
 
-bool Rectangle::collidesRect( Rectangle& inputRectangle)
+bool Rectangle::collidesRect(const Rectangle& inputRectangle) const
 {
     return collidesLeftRight(inputRectangle) && collidesUpDown(inputRectangle);
 }
 
-bool Rectangle::collidesUpDown( Rectangle& inputRectangle)
+bool Rectangle::collidesUpDown(const Rectangle& inputRectangle) const
 {
     return this->getTopEdge() <= inputRectangle.getBottomEdge() &&
            this->getBottomEdge() >= inputRectangle.getTopEdge();
 }
 
-bool Rectangle::collidesLeftRight( Rectangle& inputRectangle)
+bool Rectangle::collidesLeftRight(const Rectangle& inputRectangle) const
 {
     return this->getLeftEdge() <= inputRectangle.getRightEdge() &&
            this->getRightEdge() >= inputRectangle.getLeftEdge();
 }
 
-bool Rectangle::containsPoint(const Point& inputPoint)
+bool Rectangle::containsPoint(const Point& inputPoint) const
 {
     return  this->getLeftEdge() <= inputPoint.x &&
             this->getRightEdge() >= inputPoint.x &&
@@ -91,22 +91,22 @@ Line Rectangle::getRightLine()
 }
 
 //EDGE getters
-Sint32 Rectangle::getTopEdge() 
+Sint32 Rectangle::getTopEdge() const
 {
     return this->getRectY();
 }
 
-Sint32 Rectangle::getBottomEdge() 
+Sint32 Rectangle::getBottomEdge() const
 {
     return this->getRectY() + this->getRectH();
 }
 
-Sint32 Rectangle::getLeftEdge() 
+Sint32 Rectangle::getLeftEdge() const
 {
     return this->getRectX();
 }
 
-Sint32 Rectangle::getRightEdge() 
+Sint32 Rectangle::getRightEdge() const
 {
     return this->getRectX() + this->getRectW();
 }
@@ -149,19 +149,23 @@ void Rectangle::setRectH(Sint32 value){
 }
 
 //X, Y, W, H getters
-Sint32 Rectangle::getRectX() {
+Sint32 Rectangle::getRectX() const
+{
     return this->rect.x;
 }
 
-Sint32 Rectangle::getRectY() {
+Sint32 Rectangle::getRectY() const
+{
     return this->rect.y;
 }
 
-Sint32 Rectangle::getRectW() {
+Sint32 Rectangle::getRectW() const
+{
     return this->rect.w;
 }
 
-Sint32 Rectangle::getRectH() {
+Sint32 Rectangle::getRectH() const
+{
     return this->rect.h;
 }
 

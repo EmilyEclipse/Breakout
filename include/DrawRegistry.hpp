@@ -17,5 +17,5 @@ public:
 
 private:
     std::list<const Rectangle *> stuffToDraw;
-    Uint16 idCounter;
+    Uint32 idCounter;
 };

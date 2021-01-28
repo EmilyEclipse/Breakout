@@ -164,41 +164,35 @@ void Ball::handleBlockCollision()
     bool collidedBlock = false;
 
     if(this->collidesRect(hyper->hyperblockCollider))
-        for(Uint16 rowNr = 0; rowNr < hyper->elements.size(); ++rowNr)
+        for(auto block_iter = hyper->elements.begin(); block_iter != hyper->elements.end(); ++block_iter)
+            if(this->collidesRect(*block_iter))
             {
-                auto& row = hyper->elements[rowNr];
-                for(Uint16 blockNr = 0; blockNr < row.size(); ++blockNr)
-                    {
-                        auto& block = row[blockNr];
-                        if(this->collidesRect(block))
-                        {
-                            if(block.containsPoint(getTLPoint()) ||
-                                block.containsPoint(getTRPoint()))
-                            {   //top of ball collision
-                                if(ySpeed < 0)
-                                    ySpeed *= -1;
-                            } else if (block.containsPoint(getBLPoint()) ||
-                                block.containsPoint(getBRPoint()))
-                            {   //bottom of ball collision
-                                if(ySpeed > 0)
-                                    ySpeed *= -1;
-                            } else if(block.containsPoint(getTLPoint()) ||
-                                block.containsPoint(getBLPoint()))
-                            {   //left side of ball collision
-                                if(xSpeed < 0)
-                                    xSpeed *= -1;
-                            } else if(block.containsPoint(getTLPoint()) ||
-                                block.containsPoint(getBLPoint()))
-                            {   //right side of ball collision
-                                if(xSpeed > 0)
-                                    xSpeed *= -1;
-                            }
-
-                            hyper->elementsToDelete[rowNr].push_back(blockNr);
-                            collidedBlock = true;
-                        }
-                    }
+                if(block_iter->containsPoint(getTLPoint()) ||
+                    block_iter->containsPoint(getTRPoint()))
+                {   //top of ball collision
+                    if(ySpeed < 0)
+                        ySpeed *= -1;
+                } else if (block_iter->containsPoint(getBLPoint()) ||
+                    block_iter->containsPoint(getBRPoint()))
+                {   //bottom of ball collision
+                    if(ySpeed > 0)
+                        ySpeed *= -1;
+                } else if(block_iter->containsPoint(getTLPoint()) ||
+                    block_iter->containsPoint(getBLPoint()))
+                {   //left side of ball collision
+                    if(xSpeed < 0)
+                        xSpeed *= -1;
+                } else if(block_iter->containsPoint(getTLPoint()) ||
+                    block_iter->containsPoint(getBLPoint()))
+                {   //right side of ball collision
+                    if(xSpeed > 0)
+                        xSpeed *= -1;
                 }
+
+                hyper->elementsToDelete.push_back(block_iter);
+                collidedBlock = true;
+                break;
+            }
 
     if(collidedBlock)
     {

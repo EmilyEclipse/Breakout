@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <list>
+#include <vector>
 #include <tuple>
 #include <utility>
 
@@ -23,7 +25,9 @@ Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH
     //add blocks to row
     for(int i = 0; i < numberOfBlocks; ++i){
         Uint16 blockX = startPosX + i * (blockW + blockSpacingX);
+        
         Block block(blockX, startPosY, blockW, blockH, red, green, blue);
+
         elements.push_back(block);
     }
 
@@ -63,17 +67,18 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
     for(Uint8 i = 0; i < rowColors.size(); ++i)
     {
         Uint16 rowStartPosY = startPosY + i * (blockH + blockSpacingY);
-        Row currentRow (blocksPerRow, startPosX, rowStartPosY, blockH, blockSpacingX,
-                        windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
-                        std::get<2>(rowColors[i]));
-        this->elements.push_back(currentRow.elements);
+        Row currentRow (
+                blocksPerRow, startPosX, rowStartPosY, blockH, blockSpacingX,
+                windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
+                std::get<2>(rowColors[i]));
+        this->elements.splice(this->elements.end(), currentRow.elements);
 
-        std::vector<int> deletionRow;
-        this->elementsToDelete.push_back(deletionRow);
+        // std::list<int> deletionRow;
+        // this->elementsToDelete.insert(elementsToDelete.begin(), deletionRow);
     }
 
     //make HyperBlock colliding box
-    Uint8 nrOfColumns = this->elements.size();
+    Uint8 nrOfColumns = rowColors.size();
 
     Uint16 rowWidth = *windowWidth - 2 * startPosX;
     Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfColumns - blockSpacingY;
@@ -83,20 +88,29 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
 
 void HyperBlock::handleRemoveElements()
 {
-    for(Uint64 rowNr = 0; rowNr != elementsToDelete.size(); ++rowNr)
+    // for(Uint64 rowNr = 0; rowNr != elementsToDelete.size(); ++rowNr)
+    // {
+    //     vector<int> &deletionRow = elementsToDelete[rowNr];
+    //     vector<Block> &row = elements[rowNr];
+
+    //     for(auto index : deletionRow)
+    //     {
+    //         auto elementToDeletePos = row.begin() + index;
+    //         drawReg->UnregisterElement(elementToDeletePos->getRectangle());
+    //         std::iter_swap(elementToDeletePos, --row.end());
+    //         row.pop_back();
+    //     }
+    // }
+
+    for(auto delete_el_iter = elementsToDelete.begin(); delete_el_iter != elementsToDelete.end(); ++delete_el_iter)
     {
-        vector<int> &deletionRow = elementsToDelete[rowNr];
-        vector<Block> &row = elements[rowNr];
-
-        for(auto index : deletionRow)
-        {
-            auto elementToDeletePos = row.begin() + index;
-            drawReg->UnregisterElement(elementToDeletePos->getRectangle());
-            std::iter_swap(elementToDeletePos, --row.end());
-            row.pop_back();
-        }
+        drawReg->UnregisterElement((**delete_el_iter).getRectangle());
+        elements.erase(*delete_el_iter);
     }
+        
 
-    for(Uint16 row = 0; row != elementsToDelete.size(); ++row)
-        elementsToDelete[row].clear();
+    elementsToDelete.clear();
+
+    // for(Uint16 row = 0; row != elementsToDelete.size(); ++row)
+    //     elementsToDelete[row].clear();
 }

@@ -3,13 +3,11 @@
 
 #include <SDL2/SDL.h>
 
-#include <vector>
+#include <list>
 
 #include "Block.hpp"
 #include "Rectangle.hpp"
 #include "DrawRegistry.hpp"
-
-using std::vector;
 
 class HyperBlock{
 public:
@@ -20,9 +18,11 @@ public:
     void handleCollisions(Rectangle *collidingRect);
     void handleRemoveElements();
 
+    //using elementsIter = std::list<Block>::iterator;
+
     Rectangle hyperblockCollider;
-    vector<vector<Block>> elements;
-    vector<vector<int>> elementsToDelete;
+    std::list<Block> elements;
+    std::list<std::list<Block>::iterator> elementsToDelete;
     
     
 private:

@@ -5,7 +5,7 @@
 #include "RenderWindow.hpp"
 
 Paddle::Paddle(Uint16 windowWidth)
-    :   Rectangle(windowWidth / 2, 1000, 300, 50, 20, 255, 255, 255),
+    :   Rectangle(windowWidth / 2, 1000, 300, 50, 10, 255, 255, 255),
         leftLimit(0), rightLimit(windowWidth - getRectW())
 {
 

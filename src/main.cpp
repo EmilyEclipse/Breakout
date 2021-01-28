@@ -39,9 +39,8 @@ int main(int argc, char *argv[])
     drawReg.RegisterElement(paddle.getRectangle());
     drawReg.RegisterElement(ball.getRectangle());
     
-    for(auto row : hyperBlock.elements)
-        for(auto block : row)
-            drawReg.RegisterElement(block.getRectangle());
+    for(auto block_iter = hyperBlock.elements.begin(); block_iter != hyperBlock.elements.end(); ++block_iter)
+        drawReg.RegisterElement(&(*block_iter));
 
 
     Keyboard::setPaddle(&paddle);

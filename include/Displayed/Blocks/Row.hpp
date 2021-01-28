@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <list>
 
 #include "Block.hpp"
 #include "Rectangle.hpp"
@@ -13,7 +13,7 @@ public:
 
     Uint16 calculateBlockWidth(Uint16 windowWidth, Uint8 numberOfBlocks,
                               Uint16 startPosX, Uint8 blockSpacingX);
-    std::vector<Block> elements;
+    std::list<Block> elements;
 
 private:
     Rectangle rowCollider;
