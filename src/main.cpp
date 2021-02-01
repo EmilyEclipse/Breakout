@@ -10,7 +10,10 @@
 #include "Paddle.hpp"
 #include "HyperBlock.hpp"
 #include "Keyboard.hpp"
+#include "ScoreKeeper.hpp"
 #include "Util.hpp"
+
+#include "Texture.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +25,13 @@ int main(int argc, char *argv[])
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
 
     if(SDL_Init(SDL_INIT_VIDEO) != 0)
-        std::cerr << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
+        std::cout << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
+
+    if (TTF_Init() != 0){
+        std::cout << "TTF_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
+	    SDL_Quit();
+	    return 1;
+    }
 
     RenderWindow window(title, windowWidth, windowHeight);
 
@@ -31,6 +40,9 @@ int main(int argc, char *argv[])
     SDL_Event event;
 
     DrawRegistry drawReg;
+    Draw::loadTTF("arcade-classic.ttf", 300);
+    Draw::setRenderer(window.getRenderer());
+    ScoreKeeper scoreKeeper(&windowWidth);
     
     Paddle paddle(windowWidth);
     HyperBlock hyperBlock(100, 150, &windowWidth, drawReg);
@@ -44,7 +56,7 @@ int main(int argc, char *argv[])
 
 
     Keyboard::setPaddle(&paddle);
-    Draw::setRenderer(window.getRenderer());
+    
 
     //MAIN GAME LOOPS
     if(variableFPS)
@@ -73,6 +85,7 @@ int main(int argc, char *argv[])
             SDL_RenderClear(window.getRenderer());
 
             drawReg.DrawElements();
+            scoreKeeper.handleScore();
             SDL_RenderPresent(window.getRenderer());
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();

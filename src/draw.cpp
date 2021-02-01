@@ -1,10 +1,16 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
+#include <iostream>
+#include <string>
 
 #include "Draw.hpp"
 
 #include "HyperBlock.hpp"
+#include "Texture.hpp"
 
 SDL_Renderer* Draw::renderer;
+TTF_Font* Draw::score_font;
 
 void Draw::draw(const Rectangle& rectangle)
 {
@@ -37,7 +43,36 @@ void Draw::draw(const Line line, const Uint8 red,
         line.second.x, line.second.y);
 }
 
+void Draw::draw(const Texture* tex)
+{
+    SDL_RenderCopy(renderer, tex->getTextureP(), NULL, tex->getRect());
+}
+
+void Draw::draw(const Texture* tex, const Rectangle* destRect)
+{
+    SDL_RenderCopy(renderer, tex->getTextureP(), NULL, destRect->getRect());
+}
+
+
+SDL_Texture* Draw::renderText(std::string text,
+        const Uint8 red, const Uint8 green, const Uint8 blue)
+{
+    SDL_Color color = {red, green, blue, 255};
+    SDL_Surface* textSurf = TTF_RenderText_Solid(score_font, text.c_str(), color);
+
+    SDL_Texture* textTex = SDL_CreateTextureFromSurface(renderer, textSurf);
+
+    return textTex;
+}
+
 void Draw::setRenderer(SDL_Renderer* inputRenderer)
 {
     Draw::renderer = inputRenderer;
+}
+
+void Draw::loadTTF(std::string relativePath, Uint16 size)
+{
+    score_font = TTF_OpenFont("/home/EmilyEclipse/Projects/C++/BREAKOUT/bin/debug/arcade-classic.ttf", 42);
+    if(score_font == nullptr)
+        std::cout << "TTF_OpenFont failed. SDL error: " << SDL_GetError() << std::endl;
 }

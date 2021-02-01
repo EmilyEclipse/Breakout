@@ -4,7 +4,7 @@ COMPILER_OPTIONS = -c -Wall -std=c++14 -m64 -g
 
 BASE_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o \
 				obj/keyboard.o obj/paddle.o obj/ball.o obj/blocks.o obj/geometry.o \
-				obj/drawregistry.o
+				obj/drawregistry.o obj/texture.o obj/scorekeeper.o
 
 LINKER_OPTIONS =  -lSDL2main -lSDL2 -lSDL2_ttf
 LINKER_FILES = $(BASE_LINKER_FILES) obj/main.o
@@ -51,3 +51,9 @@ obj/geometry.o: src/geometry.cpp include/Geometry.hpp
 
 obj/drawregistry.o: src/drawregistry.cpp include/DrawRegistry.hpp
 	g++ $(COMPILER_INCLUDE) src/drawregistry.cpp -o obj/drawregistry.o $(COMPILER_OPTIONS)
+
+obj/texture.o: src/texture.cpp include/Texture.hpp
+	g++ $(COMPILER_INCLUDE) src/texture.cpp -o obj/texture.o $(COMPILER_OPTIONS)
+
+obj/scorekeeper.o: src/scorekeeper.cpp include/ScoreKeeper.hpp
+	g++ $(COMPILER_INCLUDE) src/scorekeeper.cpp -o obj/scorekeeper.o $(COMPILER_OPTIONS)
