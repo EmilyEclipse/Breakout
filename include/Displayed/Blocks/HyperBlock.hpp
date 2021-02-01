@@ -24,6 +24,7 @@ public:
     std::list<Block> elements;
     std::list<std::list<Block>::iterator> elementsToDelete;
     
+    Uint8 nrOfRows, nrOfCols;
     
 private:
     DrawRegistry * drawReg;

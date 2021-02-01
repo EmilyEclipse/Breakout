@@ -78,39 +78,22 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
     }
 
     //make HyperBlock colliding box
-    Uint8 nrOfColumns = rowColors.size();
+    nrOfRows = rowColors.size();
+    nrOfCols = blocksPerRow;
 
     Uint16 rowWidth = *windowWidth - 2 * startPosX;
-    Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfColumns - blockSpacingY;
+    Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfRows - blockSpacingY;
     Rectangle collidingBox(startPosX, startPosY, rowWidth, colliderHeight);
     hyperblockCollider = collidingBox;
 }
 
 void HyperBlock::handleRemoveElements()
 {
-    // for(Uint64 rowNr = 0; rowNr != elementsToDelete.size(); ++rowNr)
-    // {
-    //     vector<int> &deletionRow = elementsToDelete[rowNr];
-    //     vector<Block> &row = elements[rowNr];
-
-    //     for(auto index : deletionRow)
-    //     {
-    //         auto elementToDeletePos = row.begin() + index;
-    //         drawReg->UnregisterElement(elementToDeletePos->getRectangle());
-    //         std::iter_swap(elementToDeletePos, --row.end());
-    //         row.pop_back();
-    //     }
-    // }
-
     for(auto delete_el_iter = elementsToDelete.begin(); delete_el_iter != elementsToDelete.end(); ++delete_el_iter)
     {
         drawReg->UnregisterElement((**delete_el_iter).getRectangle());
         elements.erase(*delete_el_iter);
     }
         
-
     elementsToDelete.clear();
-
-    // for(Uint16 row = 0; row != elementsToDelete.size(); ++row)
-    //     elementsToDelete[row].clear();
 }

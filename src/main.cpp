@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     
     Paddle paddle(windowWidth);
     HyperBlock hyperBlock(100, 150, &windowWidth, drawReg);
-    Ball ball(&windowWidth, &windowHeight, &paddle, &hyperBlock);
+    Ball ball(&windowWidth, &windowHeight, &paddle, &hyperBlock, &scoreKeeper);
 
     drawReg.RegisterElement(paddle.getRectangle());
     drawReg.RegisterElement(ball.getRectangle());

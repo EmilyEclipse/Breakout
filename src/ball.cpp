@@ -5,14 +5,16 @@
 #include "Ball.hpp"
 #include "Rectangle.hpp"
 #include "Paddle.hpp"
+#include "ScoreKeeper.hpp"
 #include "Util.hpp"
 
 #include "Draw.hpp"
 
 
 Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-            HyperBlock *i_hyper)
-    : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50, 0, 0xFF, 0xF4, 0x4F)
+            HyperBlock *i_hyper, ScoreKeeper* i_SK)
+    :   Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50, 0, 0xFF, 0xF4, 0x4F),
+        scoreKeeper(i_SK)
 {
     xSpeed = 7;
     ySpeed = -7;
@@ -188,6 +190,12 @@ void Ball::handleBlockCollision()
                     if(xSpeed > 0)
                         xSpeed *= -1;
                 }
+
+                Uint8 blockRow = 1 + hyper->nrOfCols - 
+                        floor((block_iter->getID() + 1) / hyper->nrOfCols);
+                Uint16 blockValue = blockRow * 150;
+
+                scoreKeeper->incrementScore(blockValue);
 
                 hyper->elementsToDelete.push_back(block_iter);
                 collidedBlock = true;

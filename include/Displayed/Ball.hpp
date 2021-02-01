@@ -7,11 +7,12 @@
 #include "HyperBlock.hpp"
 #include "Geometry.hpp"
 #include "Paddle.hpp"
+#include "ScoreKeeper.hpp"
 
 class Ball: public Rectangle{
 public:
     Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-            HyperBlock *i_hyper);
+            HyperBlock *i_hyper, ScoreKeeper* i_SK);
     void move();
 
 private:
@@ -45,6 +46,7 @@ private:
     Uint16 *windowWidth, *windowHeight;
     Paddle *paddle;
     HyperBlock *hyper;
+    ScoreKeeper* scoreKeeper;
 };
 
 #endif //BALL_HPP
