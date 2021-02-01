@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 
@@ -70,9 +71,10 @@ void Draw::setRenderer(SDL_Renderer* inputRenderer)
     Draw::renderer = inputRenderer;
 }
 
-void Draw::loadTTF(std::string relativePath, Uint16 size)
+void Draw::loadTTF(std::filesystem::path relativePath, Uint16 size)
 {
-    score_font = TTF_OpenFont("/home/EmilyEclipse/Projects/C++/BREAKOUT/bin/debug/arcade-classic.ttf", 42);
+    auto fontPath = std::filesystem::current_path() / relativePath;
+    score_font = TTF_OpenFont(fontPath.string().c_str(), size);
     if(score_font == nullptr)
         std::cout << "TTF_OpenFont failed. SDL error: " << SDL_GetError() << std::endl;
 }

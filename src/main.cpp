@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     //expected time between frames(if computer is fast enough)
     const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
 
-    if(SDL_Init(SDL_INIT_VIDEO) != 0)
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
         std::cout << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
 
     if (TTF_Init() != 0){
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     SDL_Event event;
 
     DrawRegistry drawReg;
-    Draw::loadTTF("arcade-classic.ttf", 300);
+    Draw::loadTTF("arcade-classic.ttf", 42);
     Draw::setRenderer(window.getRenderer());
     ScoreKeeper scoreKeeper(&windowWidth);
     

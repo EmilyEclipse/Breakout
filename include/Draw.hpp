@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <filesystem>
 #include <string>
 
 #include "Texture.hpp"
@@ -31,7 +32,7 @@ public:
         const Uint8 red, const Uint8 green, const Uint8 blue);
 
     static void setRenderer(SDL_Renderer* renderer);
-    static void loadTTF(std::string relativePath, Uint16 size);
+    static void loadTTF(std::filesystem::path relativePath, Uint16 size);
 private:
     static SDL_Renderer *renderer;
     static TTF_Font* score_font;

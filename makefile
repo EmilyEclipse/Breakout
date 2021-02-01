@@ -1,6 +1,6 @@
 COMPILER_INCLUDE = -I include/ -I include/Displayed -I include/Displayed/Blocks\
 					-I include/Util#-I /home/EmilyEclipse/Projects/C++/BREAKOUT/include/
-COMPILER_OPTIONS = -c -Wall -std=c++14 -m64 -g
+COMPILER_OPTIONS = -c -Wall -std=c++17 -m64 -g
 
 BASE_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o \
 				obj/keyboard.o obj/paddle.o obj/ball.o obj/blocks.o obj/geometry.o \
