@@ -1,29 +1,41 @@
 #include <SDL2/SDL.h>
 
+#include <iterator>
+
 #include "Ball.hpp"
 #include "Rectangle.hpp"
 #include "Paddle.hpp"
+#include "ScoreKeeper.hpp"
+#include "Util.hpp"
+
+#include "Draw.hpp"
 
 
-Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle) 
-            : Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50){
+Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
+            HyperBlock *i_hyper, ScoreKeeper* i_SK, AudioManager* i_AM)
+    :   Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50, 0, 0xFF, 0xF4, 0x4F),
+        scoreKeeper(i_SK), audioManager(i_AM)
+{
     xSpeed = 7;
-    ySpeed = 7;
+    ySpeed = -7;
     magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
     windowWidth = i_windowWidth;
     windowHeight = i_windowHeight;
     paddle = i_paddle;
+    hyper = i_hyper;
 }
 
 void Ball::move(){
-    if(onRightEdge() || onLeftEdge()){
-        xSpeed *= -1;
-    }
-    if(onTopEdge() || onBottomEdge()){
-        ySpeed *= -1;
-    }
+    // if(onRightEdge() || onLeftEdge()){
+    //     xSpeed *= -1;
+    // }
+    // if(onTopEdge() || onBottomEdge()){
+    //     ySpeed *= -1;
+    // }
+    handleScreenCollison();
+    handleBlockCollision();
     if(this->collidesWithPaddle())
-        handleCollision();
+        handlePaddleCollision();
     moveX();
     moveY();
 }
@@ -53,11 +65,12 @@ bool Ball::onBottomEdge(){
 }
 
 
-void Ball::handleCollision(){
+void Ball::handlePaddleCollision(){
     //Number of exit angles is 'paddle_width', plus another one for the paddle's center pixel
     //if the position of that pixel is an integer (otherwise it's just imaginary)
     calculateThetaForCollision();
     polarToXY();
+    audioManager->playSample(audioManager->BLEEP);
 }
 
 void Ball::calculateThetaForCollision(){
@@ -66,7 +79,7 @@ void Ball::calculateThetaForCollision(){
         theta = M_PI_2;
     } else if(abs(pixelOfPaddle()) < paddle->getRectW() / 4.0 * (1 - angleLimitSansPI))
         theta = M_PI_2 - M_PI * (static_cast<double>(pixelOfPaddle() - 1) / paddle->getRectW());
-    else{
+    else {
         if(pixelOfPaddle() > 0)
             theta = M_PI * angleLimitSansPI;
         else
@@ -102,4 +115,115 @@ bool Ball::collidesWithPaddle(){
 void Ball::polarToXY(){
     xSpeed = magnitude * cos(theta);
     ySpeed = -magnitude * sin(theta);
+}
+
+
+
+// void Ball::teleportBallByCorner(Uint8 cornerIndex, Uint16 x, Uint16 y)
+// {
+//     switch(cornerIndex){
+//     case TL:
+//         this->setRectX(x);
+//         this->setRectY(y);
+//         break;
+//     case TR:
+//         this->setRectX(x - this->getRectW());
+//         this->setRectY(y);
+//     case BL:
+//         this->setRectX(x);
+//         this->setRectY(y - this->getRectH());
+//     case BR:
+//         this->setRectX(x - this->getRectW());
+//         this->setRectY(y - this->getRectH());
+//     }
+// }
+
+void Ball::thetaFromXY()
+{
+    this->theta = atan2(-ySpeed, xSpeed);
+}
+
+void Ball::handleScreenCollison()
+{
+    bool collided = false;
+    if(this->onLeftEdge())
+    {
+        collided = true;
+        if(xSpeed < 0)
+            xSpeed *= -1;
+    }
+    
+    if(this->onRightEdge())
+    {
+        collided = true;
+        if(xSpeed > 0)
+            xSpeed *= -1;
+    }
+    
+    if(this->onTopEdge())
+    {
+        collided = true;
+        if(ySpeed < 0)
+            ySpeed *= -1;
+    }
+
+    if(this->onBottomEdge())
+    {
+        collided = true;
+        if(ySpeed > 0)
+            ySpeed *= -1;
+    }
+
+    if(collided)
+        audioManager->playSample(audioManager->sfx::BLOOP);
+}
+
+void Ball::handleBlockCollision()
+{
+    bool collidedBlock = false;
+
+    if(this->collidesRect(hyper->hyperblockCollider))
+        for(auto block_iter = hyper->elements.begin(); block_iter != hyper->elements.end(); ++block_iter)
+            if(this->collidesRect(*block_iter))
+            {
+                if(block_iter->containsPoint(getTLPoint()) ||
+                    block_iter->containsPoint(getTRPoint()))
+                {   //top of ball collision
+                    if(ySpeed < 0)
+                        ySpeed *= -1;
+                } else if (block_iter->containsPoint(getBLPoint()) ||
+                    block_iter->containsPoint(getBRPoint()))
+                {   //bottom of ball collision
+                    if(ySpeed > 0)
+                        ySpeed *= -1;
+                } else if(block_iter->containsPoint(getTLPoint()) ||
+                    block_iter->containsPoint(getBLPoint()))
+                {   //left side of ball collision
+                    if(xSpeed < 0)
+                        xSpeed *= -1;
+                } else if(block_iter->containsPoint(getTLPoint()) ||
+                    block_iter->containsPoint(getBLPoint()))
+                {   //right side of ball collision
+                    if(xSpeed > 0)
+                        xSpeed *= -1;
+                }
+
+                audioManager->playSample(audioManager->sfx::BLEEP);
+
+                Uint8 blockRow = 1 + hyper->nrOfCols - 
+                        floor((block_iter->getID() + 1) / hyper->nrOfCols);
+                Uint16 blockValue = blockRow * 150;
+
+                scoreKeeper->incrementScore(blockValue);
+
+                hyper->elementsToDelete.push_back(block_iter);
+                collidedBlock = true;
+                break;
+            }
+
+    if(collidedBlock)
+    {
+        hyper->handleRemoveElements();
+        collidedBlock = false;
+    }
 }

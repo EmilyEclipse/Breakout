@@ -12,7 +12,7 @@ public:
 
     void moveLeft();
     void moveRight();
-    void setMoving(bool isMoving);
+    void setMoving(const bool isMoving);
     bool canMoveLeft();
     bool canMoveRight();
     double getCenterPointFromLeftEdge();

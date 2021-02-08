@@ -3,26 +3,31 @@
 
 #include <SDL2/SDL.h>
 
-#include <vector>
+#include <list>
 
 #include "Block.hpp"
 #include "Rectangle.hpp"
-#include "Ball.hpp"
-
-using std::vector;
+#include "DrawRegistry.hpp"
 
 class HyperBlock{
 public:
-    HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth);
-    vector<vector<Block>> elements;
-
+    HyperBlock();
+    HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
+        DrawRegistry& drawReg);
+    
     void handleCollisions(Rectangle *collidingRect);
+    void handleRemoveElements();
+
+    //using elementsIter = std::list<Block>::iterator;
 
     Rectangle hyperblockCollider;
-private:
+    std::list<Block> elements;
+    std::list<std::list<Block>::iterator> elementsToDelete;
     
-    vector<vector<int>> elementsToDelete;
-    void handleRemoveElements();
+    Uint8 nrOfRows, nrOfCols;
+    
+private:
+    DrawRegistry * drawReg;
 };
 
 #endif //HYPERBLOCK_HPP

@@ -1,25 +1,20 @@
 #include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <list>
+#include <vector>
 #include <tuple>
 #include <utility>
-
-#include <fstream>
-
-#include <gtest/gtest.h>
 
 #include "Block.hpp"
 #include "Row.hpp"
 #include "HyperBlock.hpp"
+#include "DrawRegistry.hpp"
 
-Block::Block(Uint16 x, Uint16 y, Uint16 w, Uint16 h, uint8_t red, uint8_t green,
-        uint8_t blue)
-        : Rectangle(x, y, w, h)
-{
-    this->red = red;
-    this->green = green;
-    this->blue = blue;
-}
+Block::Block(Uint16 x, Uint16 y, Uint16 w, Uint16 h,
+    Uint8 red, Uint8 green, Uint8 blue)
+    : Rectangle(x, y, w, h, 20, red, green, blue)
+{}
 
 Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH,
          Uint8 blockSpacingX, Uint16 *windowWidth,
@@ -30,7 +25,9 @@ Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH
     //add blocks to row
     for(int i = 0; i < numberOfBlocks; ++i){
         Uint16 blockX = startPosX + i * (blockW + blockSpacingX);
+        
         Block block(blockX, startPosY, blockW, blockH, red, green, blue);
+
         elements.push_back(block);
     }
 
@@ -46,7 +43,11 @@ Uint16 Row::calculateBlockWidth(
     return (windowWidth - 2 * startPosX) / numberOfBlocks - blockSpacingX;
 }
 
-HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
+HyperBlock::HyperBlock(){}
+
+HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
+    DrawRegistry& i_drawReg)
+    : drawReg(&i_drawReg)
 {
     Uint16 blockH = 50;
     Uint16 blockSpacingX = 15;
@@ -66,87 +67,33 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth)
     for(Uint8 i = 0; i < rowColors.size(); ++i)
     {
         Uint16 rowStartPosY = startPosY + i * (blockH + blockSpacingY);
-        Row currentRow (blocksPerRow, startPosX, rowStartPosY, blockH, blockSpacingX,
-                        windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
-                        std::get<2>(rowColors[i]));
-        this->elements.push_back(currentRow.elements);
+        Row currentRow (
+                blocksPerRow, startPosX, rowStartPosY, blockH, blockSpacingX,
+                windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
+                std::get<2>(rowColors[i]));
+        this->elements.splice(this->elements.end(), currentRow.elements);
 
-        std::vector<int> deletionRow;
-        this->elementsToDelete.push_back(deletionRow);
+        // std::list<int> deletionRow;
+        // this->elementsToDelete.insert(elementsToDelete.begin(), deletionRow);
     }
 
     //make HyperBlock colliding box
-    Uint8 nrOfColumns = this->elements.size();
+    nrOfRows = rowColors.size();
+    nrOfCols = blocksPerRow;
 
     Uint16 rowWidth = *windowWidth - 2 * startPosX;
-    Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfColumns - blockSpacingY;
+    Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfRows - blockSpacingY;
     Rectangle collidingBox(startPosX, startPosY, rowWidth, colliderHeight);
     hyperblockCollider = collidingBox;
 }
 
-
-//COLLISION HANDLING
-void HyperBlock::handleCollisions(Rectangle *collidingRect)
-{
-    std::fstream debug ("debug.txt", std::ios::app | std::ios::out);
-    debug << "handleCollisions called" << std::endl;
-    debug.close();
-
-    bool collidedBlock = false;
-
-    if(hyperblockCollider.collidesRect(collidingRect))
-    {
-        for(Uint64 row = 0; row != this->elements.size(); ++row)
-        {
-            for(Uint64 blockNr = 0; blockNr != elements.at(row).size(); ++blockNr)
-            {
-                if(elements[row][blockNr].collidesRect(collidingRect))
-                {
-                    std::fstream debug ("debug.txt", std::ios::app | std::ios::out);
-                    debug << "Collided block nr. " << blockNr <<
-                            ", row " << row << std::endl;
-                    debug.close();
-
-                    // if(std::find(elementsToDelete.begin(), elementsToDelete.end(),
-                    //    elements[row][blockNr]) == elementsToDelete.end())
-                    elementsToDelete[row].push_back(blockNr);
-                    
-                    collidedBlock = true;
-                }
-                    
-            }
-        }
-    }  
-
-    if(collidedBlock)
-    {
-        handleRemoveElements();
-        collidedBlock = false;
-    }
-    
-}
-
 void HyperBlock::handleRemoveElements()
 {
-    std::fstream debug ("debug.txt", std::fstream::app | std::fstream::out);
-    
-    for(Uint64 rowNr = 0; rowNr != elementsToDelete.size(); ++rowNr)
+    for(auto delete_el_iter = elementsToDelete.begin(); delete_el_iter != elementsToDelete.end(); ++delete_el_iter)
     {
-        vector<int> &deletionRow = elementsToDelete[rowNr];
-        vector<Block> &row = elements[rowNr];
-
-        debug << "Row " << rowNr << " of elementsToDelete; " <<
-                deletionRow.size() << " blocks."<< std::endl;
-        
-
-        for(auto index : deletionRow)
-        {
-            std::iter_swap(row.begin() + index - 1, --row.end());
-            row.pop_back();
-        }
+        drawReg->UnregisterElement((**delete_el_iter).getRectangle());
+        elements.erase(*delete_el_iter);
     }
-    debug.close();
-
-    for(Uint16 row = 0; row != elementsToDelete.size(); ++row)
-        elementsToDelete[row].clear();
+        
+    elementsToDelete.clear();
 }
