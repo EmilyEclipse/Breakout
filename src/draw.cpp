@@ -74,7 +74,7 @@ void Draw::setRenderer(SDL_Renderer* inputRenderer)
 void Draw::loadTTF(std::filesystem::path relativePath, Uint16 size)
 {
     auto fontPath = std::filesystem::current_path() / relativePath;
-    score_font = TTF_OpenFont(fontPath.string().c_str(), size);
+    score_font = TTF_OpenFont(fontPath.c_str(), size);
     if(score_font == nullptr)
         std::cout << "TTF_OpenFont failed. SDL error: " << SDL_GetError() << std::endl;
 }

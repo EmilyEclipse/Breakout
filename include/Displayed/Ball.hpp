@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "AudioManager.hpp"
 #include "Rectangle.hpp"
 #include "HyperBlock.hpp"
 #include "Geometry.hpp"
@@ -12,7 +13,7 @@
 class Ball: public Rectangle{
 public:
     Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-            HyperBlock *i_hyper, ScoreKeeper* i_SK);
+            HyperBlock *i_hyper, ScoreKeeper* i_SK, AudioManager* i_AM);
     void move();
 
 private:
@@ -47,6 +48,7 @@ private:
     Paddle *paddle;
     HyperBlock *hyper;
     ScoreKeeper* scoreKeeper;
+    AudioManager* audioManager;
 };
 
 #endif //BALL_HPP

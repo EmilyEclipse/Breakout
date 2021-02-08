@@ -2,6 +2,9 @@
 #include <iostream>
 #include <chrono>
 
+#include <fstream>
+
+#include "AudioManager.hpp"
 #include "Draw.hpp"
 #include "DrawRegistry.hpp"
 #include "RenderWindow.hpp"
@@ -10,19 +13,16 @@
 #include "Paddle.hpp"
 #include "HyperBlock.hpp"
 #include "Keyboard.hpp"
+#include "Options.hpp"
 #include "ScoreKeeper.hpp"
 #include "Util.hpp"
 
-#include "Texture.hpp"
-
 int main(int argc, char *argv[])
 {
-    const char* title = "BREAKOUT v0.2";
-    Uint16 windowWidth = 1920;
-    Uint16 windowHeight = 1080;
-    const Uint8 FPS = 60;
+    const char* title = "BREAKOUT v0.5";
+    Options options;
     //expected time between frames(if computer is fast enough)
-    const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / FPS);
+    const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / options.framesPerSecond);
 
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
         std::cout << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	    return 1;
     }
 
-    RenderWindow window(title, windowWidth, windowHeight);
+    RenderWindow window(title, options.windowWidth, options.windowHeight);
 
     const bool variableFPS = false;
     bool gameRunning = true;
@@ -42,11 +42,13 @@ int main(int argc, char *argv[])
     DrawRegistry drawReg;
     Draw::loadTTF("arcade-classic.ttf", 42);
     Draw::setRenderer(window.getRenderer());
-    ScoreKeeper scoreKeeper(&windowWidth);
+    ScoreKeeper scoreKeeper(&options.windowWidth);
+    AudioManager audioManager;
     
-    Paddle paddle(windowWidth);
-    HyperBlock hyperBlock(100, 150, &windowWidth, drawReg);
-    Ball ball(&windowWidth, &windowHeight, &paddle, &hyperBlock, &scoreKeeper);
+    Paddle paddle(options.windowWidth);
+    HyperBlock hyperBlock(100, 150, &options.windowWidth, drawReg);
+    Ball ball(&options.windowWidth, &options.windowHeight, &paddle, &hyperBlock, &scoreKeeper, 
+                &audioManager);
 
     drawReg.RegisterElement(paddle.getRectangle());
     drawReg.RegisterElement(ball.getRectangle());
@@ -67,6 +69,8 @@ int main(int argc, char *argv[])
         while(gameRunning)
         {
             std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+            std::cout << "aaaaa";
 
             while(SDL_PollEvent(&event))
             {

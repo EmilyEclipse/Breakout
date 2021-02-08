@@ -4,9 +4,10 @@ COMPILER_OPTIONS = -c -Wall -std=c++17 -m64 -g
 
 BASE_LINKER_FILES = obj/renderwindow.o obj/draw.o obj/rectangle.o \
 				obj/keyboard.o obj/paddle.o obj/ball.o obj/blocks.o obj/geometry.o \
-				obj/drawregistry.o obj/texture.o obj/scorekeeper.o
+				obj/drawregistry.o obj/texture.o obj/scorekeeper.o \
+				obj/audiomanager.o obj/options.o
 
-LINKER_OPTIONS =  -lSDL2main -lSDL2 -lSDL2_ttf
+LINKER_OPTIONS =  -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_mixer
 LINKER_FILES = $(BASE_LINKER_FILES) obj/main.o
 
 TEST_LINKER_FILES = $(BASE_LINKER_FILES) test/main.o
@@ -57,3 +58,9 @@ obj/texture.o: src/texture.cpp include/Texture.hpp
 
 obj/scorekeeper.o: src/scorekeeper.cpp include/ScoreKeeper.hpp
 	g++ $(COMPILER_INCLUDE) src/scorekeeper.cpp -o obj/scorekeeper.o $(COMPILER_OPTIONS)
+
+obj/audiomanager.o: src/audiomanager.cpp include/AudioManager.hpp
+	g++ $(COMPILER_INCLUDE) src/audiomanager.cpp -o obj/audiomanager.o $(COMPILER_OPTIONS)
+
+obj/options.o: src/options.cpp include/Options.hpp
+	g++ $(COMPILER_INCLUDE) src/options.cpp -o obj/options.o $(COMPILER_OPTIONS)

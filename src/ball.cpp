@@ -12,9 +12,9 @@
 
 
 Ball::Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-            HyperBlock *i_hyper, ScoreKeeper* i_SK)
+            HyperBlock *i_hyper, ScoreKeeper* i_SK, AudioManager* i_AM)
     :   Rectangle(*i_windowWidth / 2, *i_windowHeight / 2, 50, 50, 0, 0xFF, 0xF4, 0x4F),
-        scoreKeeper(i_SK)
+        scoreKeeper(i_SK), audioManager(i_AM)
 {
     xSpeed = 7;
     ySpeed = -7;
@@ -70,6 +70,7 @@ void Ball::handlePaddleCollision(){
     //if the position of that pixel is an integer (otherwise it's just imaginary)
     calculateThetaForCollision();
     polarToXY();
+    audioManager->playSample(audioManager->BLEEP);
 }
 
 void Ball::calculateThetaForCollision(){
@@ -144,21 +145,37 @@ void Ball::thetaFromXY()
 
 void Ball::handleScreenCollison()
 {
+    bool collided = false;
     if(this->onLeftEdge())
+    {
+        collided = true;
         if(xSpeed < 0)
             xSpeed *= -1;
+    }
     
     if(this->onRightEdge())
+    {
+        collided = true;
         if(xSpeed > 0)
             xSpeed *= -1;
+    }
     
     if(this->onTopEdge())
+    {
+        collided = true;
         if(ySpeed < 0)
             ySpeed *= -1;
+    }
 
     if(this->onBottomEdge())
+    {
+        collided = true;
         if(ySpeed > 0)
             ySpeed *= -1;
+    }
+
+    if(collided)
+        audioManager->playSample(audioManager->sfx::BLOOP);
 }
 
 void Ball::handleBlockCollision()
@@ -190,6 +207,8 @@ void Ball::handleBlockCollision()
                     if(xSpeed > 0)
                         xSpeed *= -1;
                 }
+
+                audioManager->playSample(audioManager->sfx::BLEEP);
 
                 Uint8 blockRow = 1 + hyper->nrOfCols - 
                         floor((block_iter->getID() + 1) / hyper->nrOfCols);
