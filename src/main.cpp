@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     ScoreKeeper scoreKeeper(&options.windowWidth);
     AudioManager audioManager;
     
-    Paddle paddle(options.windowWidth);
-    HyperBlock hyperBlock(options.windowWidth, drawReg, options);
+    Paddle paddle(options);
+    HyperBlock hyperBlock(drawReg, options);
     Ball ball(options, paddle, hyperBlock, scoreKeeper, audioManager);
 
     drawReg.RegisterElement(paddle.getRectangle());

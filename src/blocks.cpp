@@ -59,12 +59,13 @@ Uint16 Row::calculateBlockWidth(
 
 HyperBlock::HyperBlock(){}
 
-HyperBlock::HyperBlock(const Uint16& windowWidth, DrawRegistry& i_drawReg,
+HyperBlock::HyperBlock(DrawRegistry& i_drawReg,
     const Options& options)
     : drawReg(&i_drawReg)
 {
     const double& xScale = options.xScale;
     const double& yScale = options.yScale;
+    const Uint16 windowWidth = options.windowWidth;
     Uint16 startPosX = 100 * xScale;
     Uint16 startPosY = 150 * yScale;
     Uint16 blockH = 50 * yScale;

@@ -4,12 +4,17 @@
 #include "Rectangle.hpp"
 #include "RenderWindow.hpp"
 
-Paddle::Paddle(Uint16 windowWidth)
-    :   Rectangle(windowWidth / 2, 1000, 300, 50, 10, 255, 255, 255),
-        leftLimit(0), rightLimit(windowWidth - getRectW())
-{
-
-}
+Paddle::Paddle(Options& i_options)
+    :   Rectangle(i_options.windowWidth / 2, 1000 * i_options.yScale,
+                300 * i_options.xScale,
+                50 * i_options.yScale,
+                10,
+                255, 255, 255
+        ),
+        leftLimit(0),
+        rightLimit(i_options.windowWidth - getRectW()),
+        options(i_options)
+{ }
 
 void Paddle::moveLeft(){
     int speed = calculateSpeed(this->movementFrameCount, this->maxMovementSpeed, this->acceleration);
@@ -49,7 +54,7 @@ double Paddle::getCenterPointFromLeftEdge(){
 
 short Paddle::calculateSpeed(short frameCount, short maxSpeed, short acceleration)
 {
-    short speed = frameCount * acceleration + acceleration;
+    short speed = (frameCount * acceleration + acceleration) * options.xScale;
     if (speed <= maxSpeed)
         return speed;
     else return maxSpeed;

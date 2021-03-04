@@ -13,8 +13,7 @@
 class HyperBlock{
 public:
     HyperBlock();
-    HyperBlock(const Uint16& windowWidth, DrawRegistry& drawReg,
-                const Options& options);
+    HyperBlock(DrawRegistry& drawReg, const Options& options);
     
     void handleCollisions(Rectangle *collidingRect);
     void handleRemoveElements();

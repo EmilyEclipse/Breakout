@@ -4,11 +4,12 @@
 #include <SDL2/SDL.h>
 
 #include "Rectangle.hpp"
+#include "Options.hpp"
 
 class Paddle: public Rectangle
 {
 public:
-    Paddle(Uint16 windowWidth);
+    Paddle(Options& i_options);
 
     void moveLeft();
     void moveRight();
@@ -23,6 +24,7 @@ private:
     bool moving = false;
     Uint16 leftLimit;
     Uint16 rightLimit;
+    Options& options;
 
     short calculateSpeed(short frameCount, short maxSpeed, short acceleration);
     void handleFrameCount();
