@@ -9,11 +9,12 @@
 #include "Geometry.hpp"
 #include "Paddle.hpp"
 #include "ScoreKeeper.hpp"
+#include "Options.hpp"
 
 class Ball: public Rectangle{
 public:
-    Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-            HyperBlock *i_hyper, ScoreKeeper* i_SK, AudioManager* i_AM);
+    Ball(Options& options, Paddle& i_paddle, HyperBlock& i_hyper, 
+        ScoreKeeper& i_SK, AudioManager& i_AM);
     void move();
 
 private:

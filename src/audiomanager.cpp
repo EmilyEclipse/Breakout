@@ -8,11 +8,13 @@ AudioManager::AudioManager()
     {
         Mix_Chunk* mc_p = Mix_LoadWAV(("sfx" / name).c_str());
         if(mc_p != nullptr)
+        {
             samples.push_back(mc_p);
             //mc_p->volume = 128;
+        }
         else {
             std::cout << "SDL_Mix failed to load sample file \"" << name <<"\".\n"
-                        << "SDL_Error: " << SDL_GetError();     
+                      << "SDL_Error: " << SDL_GetError();     
         }
     }
 }

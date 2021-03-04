@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
     const char* title = "BREAKOUT v0.5";
     Options options;
     //expected time between frames(if computer is fast enough)
-    const std::chrono::milliseconds interval = static_cast<std::chrono::milliseconds>(1000 / options.framesPerSecond);
+    int ratio = floor(1000.0 / options.framesPerSecond);
+    const std::chrono::milliseconds interval(ratio);
 
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
         std::cout << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
@@ -46,19 +47,17 @@ int main(int argc, char *argv[])
     AudioManager audioManager;
     
     Paddle paddle(options.windowWidth);
-    HyperBlock hyperBlock(100, 150, &options.windowWidth, drawReg);
-    Ball ball(&options.windowWidth, &options.windowHeight, &paddle, &hyperBlock, &scoreKeeper, 
-                &audioManager);
+    HyperBlock hyperBlock(options.windowWidth, drawReg, options);
+    Ball ball(options, paddle, hyperBlock, scoreKeeper, audioManager);
 
     drawReg.RegisterElement(paddle.getRectangle());
     drawReg.RegisterElement(ball.getRectangle());
     
-    for(auto block_iter = hyperBlock.elements.begin(); block_iter != hyperBlock.elements.end(); ++block_iter)
+    for(auto block_iter = hyperBlock.getElements()->begin(); block_iter != hyperBlock.getElements()->end(); ++block_iter)
         drawReg.RegisterElement(&(*block_iter));
 
 
     Keyboard::setPaddle(&paddle);
-    
 
     //MAIN GAME LOOPS
     if(variableFPS)
@@ -70,8 +69,6 @@ int main(int argc, char *argv[])
         {
             std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-            std::cout << "aaaaa";
-
             while(SDL_PollEvent(&event))
             {
                 if(event.type == SDL_QUIT)
@@ -82,6 +79,7 @@ int main(int argc, char *argv[])
             }
 
             Keyboard::handleInput();
+
             ball.move();
 
 
@@ -93,7 +91,7 @@ int main(int argc, char *argv[])
             SDL_RenderPresent(window.getRenderer());
 
             std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<int, std::milli> timeFrameTookToRun = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end - start);
+            std::chrono::duration<int64_t, std::nano> timeFrameTookToRun = end - start;
             Util::safeSleep(timeFrameTookToRun, interval);
         }
     }

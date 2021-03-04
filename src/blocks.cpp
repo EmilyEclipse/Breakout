@@ -10,17 +10,31 @@
 #include "Row.hpp"
 #include "HyperBlock.hpp"
 #include "DrawRegistry.hpp"
+#include "Options.hpp"
+
+Uint16 Block::ID_Counter = 0;
 
 Block::Block(Uint16 x, Uint16 y, Uint16 w, Uint16 h,
     Uint8 red, Uint8 green, Uint8 blue)
-    : Rectangle(x, y, w, h, 20, red, green, blue)
+    :   Rectangle(x, y, w, h, 20, red, green, blue),
+        ID(Block::ID_Counter++)
 {}
 
+void Block::initID()
+{
+    Block::ID_Counter = 0;
+}
+
+const Uint16 Block::getID() const
+{
+    return this->ID;
+}
+
 Row::Row(Uint8 numberOfBlocks, Uint16 startPosX, Uint16 startPosY, Uint16 blockH,
-         Uint8 blockSpacingX, Uint16 *windowWidth,
+         Uint8 blockSpacingX, const Uint16& windowWidth,
          Uint8 red, Uint8 green, Uint8 blue)
 {
-    Uint16 blockW = calculateBlockWidth(*windowWidth, numberOfBlocks, startPosX, blockSpacingX);
+    Uint16 blockW = calculateBlockWidth(windowWidth, numberOfBlocks, startPosX, blockSpacingX);
 
     //add blocks to row
     for(int i = 0; i < numberOfBlocks; ++i){
@@ -45,14 +59,20 @@ Uint16 Row::calculateBlockWidth(
 
 HyperBlock::HyperBlock(){}
 
-HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
-    DrawRegistry& i_drawReg)
+HyperBlock::HyperBlock(const Uint16& windowWidth, DrawRegistry& i_drawReg,
+    const Options& options)
     : drawReg(&i_drawReg)
 {
-    Uint16 blockH = 50;
-    Uint16 blockSpacingX = 15;
-    Uint16 blockSpacingY = 15;
+    const double& xScale = options.xScale;
+    const double& yScale = options.yScale;
+    Uint16 startPosX = 100 * xScale;
+    Uint16 startPosY = 150 * yScale;
+    Uint16 blockH = 50 * yScale;
+    Uint16 blockSpacingX = 15 * xScale;
+    Uint16 blockSpacingY = 15 * yScale;
     Uint16 blocksPerRow = 5;
+
+    Block::initID();
     
 
     //add rows to HyperBlock
@@ -72,16 +92,13 @@ HyperBlock::HyperBlock(Uint16 startPosX, Uint16 startPosY, Uint16 *windowWidth,
                 windowWidth, std::get<0>(rowColors[i]), std::get<1>(rowColors[i]),
                 std::get<2>(rowColors[i]));
         this->elements.splice(this->elements.end(), currentRow.elements);
-
-        // std::list<int> deletionRow;
-        // this->elementsToDelete.insert(elementsToDelete.begin(), deletionRow);
     }
 
     //make HyperBlock colliding box
     nrOfRows = rowColors.size();
     nrOfCols = blocksPerRow;
 
-    Uint16 rowWidth = *windowWidth - 2 * startPosX;
+    Uint16 rowWidth = windowWidth - 2 * startPosX;
     Uint16 colliderHeight = (blockH + blockSpacingY) * nrOfRows - blockSpacingY;
     Rectangle collidingBox(startPosX, startPosY, rowWidth, colliderHeight);
     hyperblockCollider = collidingBox;
@@ -96,4 +113,15 @@ void HyperBlock::handleRemoveElements()
     }
         
     elementsToDelete.clear();
+}
+
+void HyperBlock::registerForDeletion(std::list<Block>::const_iterator block_iter)
+{
+    this->elementsToDelete.push_back(block_iter);
+}
+
+std::list<Block>* HyperBlock::getElements()
+{
+    std::list<Block>* list_p = &this->elements;
+    return list_p;
 }

@@ -45,5 +45,8 @@ void Options::readOptions()
             default:
                 std::cout << "Error reading option at line " << count;
         }
-    }    
+    }
+
+    xScale = windowWidth / 1920.0;
+    yScale = windowHeight / 1080.0; 
 }

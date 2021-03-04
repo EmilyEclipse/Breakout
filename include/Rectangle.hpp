@@ -50,17 +50,14 @@ public:
     Uint8 getGreen() const;
     Uint8 getBlue() const;
 
-    Rectangle* getRectangle();
+    const Rectangle* getRectangle() const;
     
     Sint32 getLayer() const;
-    Uint32 getID() const;
-    void setID(Uint32 input);
 
 private:
     SDL_Rect rect;
     Sint32 layer;
     Uint8 red, green, blue;
-    Uint32 id;
 };
 
 #endif //RECTANGLE_HPP

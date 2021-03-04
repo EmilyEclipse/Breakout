@@ -23,7 +23,7 @@ test/main.o: test/main.cpp
 BREAKOUT: $(LINKER_FILES)
 	g++ $(LINKER_FILES) $(LINKER_OPTIONS) -o bin/debug/BREAKOUT
 
-obj/main.o: src/main.cpp
+obj/main.o: src/main.cpp include/Util/Util.hpp
 	g++ $(COMPILER_INCLUDE) src/main.cpp -o obj/main.o $(COMPILER_OPTIONS)
 
 obj/renderwindow.o: src/renderwindow.cpp include/RenderWindow.hpp
