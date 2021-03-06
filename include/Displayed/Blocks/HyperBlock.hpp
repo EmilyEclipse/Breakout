@@ -28,10 +28,14 @@ public:
     
     Uint8 nrOfRows, nrOfCols;
     
+    Uint8 getHighestCollidedRow() const;
+    void setHighestCollidedRow(const Uint8 rowNr);
+
 private:
     DrawRegistry* drawReg;
     std::list<Block> elements;
     std::list<std::list<Block>::const_iterator> elementsToDelete;
+    Uint8 highestCollidedRow = 0;
 };
 
 #endif //HYPERBLOCK_HPP

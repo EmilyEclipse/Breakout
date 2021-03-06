@@ -17,15 +17,13 @@ Ball::Ball(Options& options, Paddle& i_paddle, HyperBlock& i_hyper,
     :   Rectangle(options.windowWidth / 2, options.windowHeight / 2,
                   50 * options.xScale, 50 * options.yScale,
                   0, 0xFF, 0xF4, 0x4F),
+        windowWidth(&options.windowWidth), windowHeight(&options.windowHeight),
+        paddle(&i_paddle), hyper(&i_hyper),
         scoreKeeper(&i_SK), audioManager(&i_AM)
 {
     xSpeed = 7 * options.xScale;
     ySpeed = -7 * options.yScale;
     magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
-    windowWidth = &options.windowWidth;
-    windowHeight = &options.windowHeight;
-    paddle = &i_paddle;
-    hyper = &i_hyper;
 }
 
 void Ball::move(){
@@ -44,11 +42,11 @@ void Ball::move(){
 }
 
 void Ball::moveX(){
-    setRectX(getRectX() + xSpeed);
+    setRectX(getRectX() + xSpeed * speedFactor);
 }
 
 void Ball::moveY(){
-    setRectY(getRectY() + ySpeed);
+    setRectY(getRectY() + ySpeed * speedFactor);
 }
 
 bool Ball::onRightEdge(){
@@ -218,6 +216,13 @@ void Ball::handleBlockCollision()
                         floor((block_iter->getID() + 1) / hyper->nrOfCols);
                 Uint16 blockValue = blockRow * 150;
 
+                if(blockRow > hyper->getHighestCollidedRow())
+                {
+                    hyper->setHighestCollidedRow(blockRow);
+                    this->setSpeedFactor(1 + 0.2 * blockRow);
+                }
+                    
+
                 scoreKeeper->incrementScore(blockValue);
 
                 hyper->registerForDeletion(block_iter);
@@ -231,4 +236,9 @@ void Ball::handleBlockCollision()
         hyper->handleRemoveElements();
         collidedBlock = false;
     }
+}
+
+void Ball::setSpeedFactor(double i_speedFactor)
+{
+    this->speedFactor = i_speedFactor;
 }

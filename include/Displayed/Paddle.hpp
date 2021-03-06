@@ -3,13 +3,14 @@
 
 #include <SDL2/SDL.h>
 
+#include "HyperBlock.hpp"
 #include "Rectangle.hpp"
 #include "Options.hpp"
 
 class Paddle: public Rectangle
 {
 public:
-    Paddle(Options& i_options);
+    Paddle(const Options& i_options, const HyperBlock& i_hyper);
 
     void moveLeft();
     void moveRight();
@@ -17,6 +18,7 @@ public:
     bool canMoveLeft();
     bool canMoveRight();
     double getCenterPointFromLeftEdge();
+    short getMaxSpeed() const;
 private:
     short maxMovementSpeed = 10;
     short acceleration = 2;
@@ -24,9 +26,10 @@ private:
     bool moving = false;
     Uint16 leftLimit;
     Uint16 rightLimit;
-    Options& options;
+    const Options& options;
+    const HyperBlock& hyper;
 
-    short calculateSpeed(short frameCount, short maxSpeed, short acceleration);
+    short calculateSpeed(short frameCount, short msToMax, short maxSpeed, short acceleration);
     void handleFrameCount();
 };
 

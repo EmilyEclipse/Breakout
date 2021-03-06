@@ -126,3 +126,13 @@ std::list<Block>* HyperBlock::getElements()
     std::list<Block>* list_p = &this->elements;
     return list_p;
 }
+
+Uint8 HyperBlock::getHighestCollidedRow() const 
+{
+    return this->highestCollidedRow;
+}
+
+void HyperBlock::setHighestCollidedRow(Uint8 rowNr)
+{
+    this->highestCollidedRow = rowNr;
+}

@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     ScoreKeeper scoreKeeper(&options.windowWidth);
     AudioManager audioManager;
     
-    Paddle paddle(options);
     HyperBlock hyperBlock(drawReg, options);
+    Paddle paddle(options, hyperBlock);
     Ball ball(options, paddle, hyperBlock, scoreKeeper, audioManager);
 
     drawReg.RegisterElement(paddle.getRectangle());
@@ -79,7 +79,6 @@ int main(int argc, char *argv[])
             }
 
             Keyboard::handleInput();
-
             ball.move();
 
 
