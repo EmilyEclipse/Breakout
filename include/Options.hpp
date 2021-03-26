@@ -15,6 +15,8 @@ public:
     Uint16 windowHeight;
     Uint16 framesPerSecond;
 
+    double xScale, yScale;
+
 private:
     enum options {
         window_width,

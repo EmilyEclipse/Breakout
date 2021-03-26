@@ -181,24 +181,16 @@ Uint8 Rectangle::getBlue() const{
     return this->blue;
 }
 
-
-Rectangle* Rectangle::getRectangle(){
-    return this;
+const Rectangle* Rectangle::getRectangle() const{
+    const Rectangle* rect_p = this;
+    return rect_p;
 }
 
 const SDL_Rect* Rectangle::getRect() const {
-    const SDL_Rect * p_rect = &(this->rect);
+    const SDL_Rect* p_rect = &(this->rect);
     return p_rect;
 }
 
 Sint32 Rectangle::getLayer() const{
     return this->layer;
-}
-
-Uint32 Rectangle::getID() const{
-    return this->id;
-}
-
-void Rectangle::setID(Uint32 input) {
-    this->id = input;
 }

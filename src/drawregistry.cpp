@@ -3,7 +3,9 @@
 
 #include "DrawRegistry.hpp"
 
-DrawRegistry::DrawRegistry() : idCounter(0) {}
+DrawRegistry::DrawRegistry(){
+    this->stuffToDraw.clear();
+}
 
 void DrawRegistry::DrawElements() const
 {
@@ -13,12 +15,15 @@ void DrawRegistry::DrawElements() const
     }
 }
 
-void DrawRegistry::RegisterElement(Rectangle * input)
+void DrawRegistry::RegisterElement(const Rectangle* input)
 {
+    if(!stuffToDraw.empty())
+    {
     stuffToDraw.insert(std::lower_bound(stuffToDraw.begin(), stuffToDraw.end(),
         input, DrawRegistry::compare), input);
-    
-    input->setID(idCounter++);
+    } else {
+        stuffToDraw.push_back(input);
+    }
 }
 
 void DrawRegistry::UnregisterElement(const Rectangle * input)

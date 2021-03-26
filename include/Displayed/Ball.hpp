@@ -9,12 +9,15 @@
 #include "Geometry.hpp"
 #include "Paddle.hpp"
 #include "ScoreKeeper.hpp"
+#include "Options.hpp"
 
 class Ball: public Rectangle{
 public:
-    Ball(Uint16 *i_windowWidth, Uint16 *i_windowHeight, Paddle *i_paddle,
-            HyperBlock *i_hyper, ScoreKeeper* i_SK, AudioManager* i_AM);
+    Ball(Options& options, Paddle& i_paddle, HyperBlock& i_hyper, 
+        ScoreKeeper& i_SK, AudioManager& i_AM);
     void move();
+
+    void setSpeedFactor(double i_speedFactor);
 
 private:
     void moveX();
@@ -41,6 +44,7 @@ private:
 
     double xSpeed;
     double ySpeed;
+    double speedFactor = 1;
     const double angleLimitSansPI = static_cast<double>(1) / 3;
     double magnitude;
     double theta;
