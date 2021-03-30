@@ -27,4 +27,11 @@ public:
         //assumes timeFrameTookToRun is not negative
         return (interval - timeFrameTookToRun).count();
     }
+
+    static std::chrono::high_resolution_clock::time_point calculateTimeTo(std::chrono::milliseconds millis)
+    {
+        std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
+        std::chrono::high_resolution_clock::time_point intervalStart = now + millis;
+        return intervalStart;
+    }
 };

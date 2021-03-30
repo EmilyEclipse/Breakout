@@ -21,8 +21,8 @@ Ball::Ball(Options& options, Paddle& i_paddle, HyperBlock& i_hyper,
         paddle(&i_paddle), hyper(&i_hyper),
         scoreKeeper(&i_SK), audioManager(&i_AM)
 {
-    xSpeed = 7 * options.xScale;
-    ySpeed = -7 * options.yScale;
+    xSpeed = 5 * options.xScale;
+    ySpeed = 5 * options.yScale;
     magnitude = sqrt(xSpeed * xSpeed + ySpeed * ySpeed);
 }
 
@@ -170,9 +170,11 @@ void Ball::handleScreenCollison()
 
     if(this->onBottomEdge())
     {
-        collided = true;
-        if(ySpeed > 0)
-            ySpeed *= -1;
+        // collided = true;
+        // if(ySpeed > 0)
+        //     ySpeed *= -1;
+        gameOver = true;
+        return;
     }
 
     if(collided)
@@ -241,4 +243,13 @@ void Ball::handleBlockCollision()
 void Ball::setSpeedFactor(double i_speedFactor)
 {
     this->speedFactor = i_speedFactor;
+}
+
+//True if the game should continue, false otherwise
+bool Ball::getGameOverStatus() const{
+    return this->gameOver;
+}
+
+void Ball::setGameOverStatus(bool value) {
+    this->gameOver = value;
 }

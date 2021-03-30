@@ -19,6 +19,9 @@ public:
 
     void setSpeedFactor(double i_speedFactor);
 
+    bool getGameOverStatus() const;
+    void setGameOverStatus(bool value);
+
 private:
     void moveX();
     void moveY();
@@ -48,6 +51,7 @@ private:
     const double angleLimitSansPI = static_cast<double>(1) / 3;
     double magnitude;
     double theta;
+    bool gameOver = false;
     Uint16 *windowWidth, *windowHeight;
     Paddle *paddle;
     HyperBlock *hyper;

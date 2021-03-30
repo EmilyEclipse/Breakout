@@ -23,6 +23,9 @@ test/main.o: test/main.cpp
 BREAKOUT: $(LINKER_FILES)
 	g++ $(LINKER_FILES) $(LINKER_OPTIONS) -o bin/debug/BREAKOUT
 
+WINDOWS: $(LINKER_FILES)
+	x86_64-w64-mingw32-g++ $(LINKER_FILES) $(LINKER_OPTIONS) -o bin/release/BREAKOUT.EXE
+
 obj/main.o: src/main.cpp include/Util/Util.hpp
 	g++ $(COMPILER_INCLUDE) src/main.cpp -o obj/main.o $(COMPILER_OPTIONS)
 
