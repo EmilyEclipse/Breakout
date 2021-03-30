@@ -14,12 +14,13 @@
 #include "HyperBlock.hpp"
 #include "Keyboard.hpp"
 #include "Options.hpp"
+#include "Level.hpp"
 #include "ScoreKeeper.hpp"
 #include "Util.hpp"
 
 int main(int argc, char *argv[])
 {
-    const char* title = "BREAKOUT v0.5";
+    const char* title = "BREAKOUT v0.8";
     Options options;
     //expected time between frames(if computer is fast enough)
     int ratio = floor(1000.0 / options.framesPerSecond);
@@ -36,38 +37,38 @@ int main(int argc, char *argv[])
 
     RenderWindow window(title, options.windowWidth, options.windowHeight);
 
-    const bool variableFPS = false;
     bool gameRunning = true;
     SDL_Event event;
 
-    DrawRegistry drawReg;
+    // DrawRegistry drawReg;
     Draw::loadTTF("arcade-classic.ttf", 42);
     Draw::setRenderer(window.getRenderer());
     ScoreKeeper scoreKeeper(&options.windowWidth);
     AudioManager audioManager;
+
+    LevelManager levelManager(audioManager, options, scoreKeeper);
     
-    HyperBlock hyperBlock(drawReg, options);
-    Paddle paddle(options, hyperBlock);
-    Ball ball(options, paddle, hyperBlock, scoreKeeper, audioManager);
+    // HyperBlock hyperBlock(drawReg, options);
+    // Paddle paddle(options, hyperBlock);
+    // Ball ball(options, paddle, hyperBlock, scoreKeeper, audioManager);
 
-    drawReg.RegisterElement(paddle.getRectangle());
-    drawReg.RegisterElement(ball.getRectangle());
+    // drawReg.RegisterElement(paddle.getRectangle());
+    // drawReg.RegisterElement(ball.getRectangle());
     
-    for(auto block_iter = hyperBlock.getElements()->begin(); block_iter != hyperBlock.getElements()->end(); ++block_iter)
-        drawReg.RegisterElement(&(*block_iter));
+    // for(auto block_iter = hyperBlock.getElements()->begin(); block_iter != hyperBlock.getElements()->end(); ++block_iter)
+    //     drawReg.RegisterElement(&(*block_iter));
 
+    levelManager.makeLevel();
 
-    Keyboard::setPaddle(&paddle);
-
-    //MAIN GAME LOOPS
-    if(variableFPS)
+    //ONE SECOND FOR THE PLAYER TO GET READY
     {
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+        std::chrono::milliseconds readyTime(1500);
+        std::chrono::high_resolution_clock::time_point stop = start + readyTime;
 
-    } else 
-    {
-        while(gameRunning)
+        while(std::chrono::high_resolution_clock::now() <= stop)
         {
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            std::chrono::high_resolution_clock::time_point frameStart = std::chrono::high_resolution_clock::now();
 
             while(SDL_PollEvent(&event))
             {
@@ -79,21 +80,51 @@ int main(int argc, char *argv[])
             }
 
             Keyboard::handleInput();
-            ball.move();
-
 
             SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
             SDL_RenderClear(window.getRenderer());
 
-            drawReg.DrawElements();
-            scoreKeeper.handleScore();
+            levelManager.drawReg->DrawElements();
+            levelManager.scoreKeeper->handleScore();
             SDL_RenderPresent(window.getRenderer());
 
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<int64_t, std::nano> timeFrameTookToRun = end - start;
+            std::chrono::high_resolution_clock::time_point frameEnd = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<int64_t, std::nano> timeFrameTookToRun = frameEnd - frameStart;
             Util::safeSleep(timeFrameTookToRun, interval);
         }
     }
+    
+    //MAIN GAME LOOP
+
+    while(gameRunning)
+    {
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+        while(SDL_PollEvent(&event))
+        {
+            if(event.type == SDL_QUIT)
+            {
+                gameRunning = false;
+                break;
+            }
+        }
+
+        Keyboard::handleInput();
+        levelManager.ball->move();
+
+
+        SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
+        SDL_RenderClear(window.getRenderer());
+
+        levelManager.drawReg->DrawElements();
+        levelManager.scoreKeeper->handleScore();
+        SDL_RenderPresent(window.getRenderer());
+
+        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<int64_t, std::nano> timeFrameTookToRun = end - start;
+        Util::safeSleep(timeFrameTookToRun, interval);
+    }
+    levelManager.destroyLevel();
     window.cleanUp();
 
     SDL_Quit();
