@@ -18,6 +18,8 @@
 #include "ScoreKeeper.hpp"
 #include "Util.hpp"
 
+using namespace std::literals::chrono_literals;
+
 int main(int argc, char *argv[])
 {
     const char* title = "BREAKOUT v0.8";
@@ -36,8 +38,6 @@ int main(int argc, char *argv[])
     }
 
     RenderWindow window(title, options.windowWidth, options.windowHeight);
-
-    bool gameRunning = true;
     SDL_Event event;
 
     // DrawRegistry drawReg;
@@ -60,41 +60,44 @@ int main(int argc, char *argv[])
 
     levelManager.makeLevel();
 
-    //ONE SECOND FOR THE PLAYER TO GET READY
-    {
-        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-        std::chrono::milliseconds readyTime(1500);
-        std::chrono::high_resolution_clock::time_point stop = start + readyTime;
+    bool gameRunning = true;
+    bool retried = false;
 
-        while(std::chrono::high_resolution_clock::now() <= stop)
-        {
-            std::chrono::high_resolution_clock::time_point frameStart = std::chrono::high_resolution_clock::now();
+    // //ONE SECOND FOR THE PLAYER TO GET READY
+    // {
+        
 
-            while(SDL_PollEvent(&event))
-            {
-                if(event.type == SDL_QUIT)
-                {
-                    gameRunning = false;
-                    break;
-                }
-            }
+    //     while(std::chrono::high_resolution_clock::now() <= stop)
+    //     {
+    //         std::chrono::high_resolution_clock::time_point frameStart = std::chrono::high_resolution_clock::now();
 
-            Keyboard::handleInput();
+    //         while(SDL_PollEvent(&event))
+    //         {
+    //             if(event.type == SDL_QUIT)
+    //             {
+    //                 gameRunning = false;
+    //                 break;
+    //             }
+    //         }
 
-            SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
-            SDL_RenderClear(window.getRenderer());
+    //         Keyboard::handleInput();
 
-            levelManager.drawReg->DrawElements();
-            levelManager.scoreKeeper->handleScore();
-            SDL_RenderPresent(window.getRenderer());
+    //         SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
+    //         SDL_RenderClear(window.getRenderer());
 
-            std::chrono::high_resolution_clock::time_point frameEnd = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<int64_t, std::nano> timeFrameTookToRun = frameEnd - frameStart;
-            Util::safeSleep(timeFrameTookToRun, interval);
-        }
-    }
+    //         levelManager.drawReg->DrawElements();
+    //         levelManager.scoreKeeper->handleScore();
+    //         SDL_RenderPresent(window.getRenderer());
+
+    //         std::chrono::high_resolution_clock::time_point frameEnd = std::chrono::high_resolution_clock::now();
+    //         std::chrono::duration<int64_t, std::nano> timeFrameTookToRun = frameEnd - frameStart;
+    //         Util::safeSleep(timeFrameTookToRun, interval);
+    //     }
+    // }
     
     //MAIN GAME LOOP
+
+    auto introStop = Util::calculateTimeTo(1500ms);
 
     while(gameRunning)
     {
@@ -109,8 +112,24 @@ int main(int argc, char *argv[])
             }
         }
 
+        if(levelManager.ball->getGameOverStatus())
+        {
+            audioManager.playSample(audioManager.BAD);
+            if(!retried)
+            {
+                levelManager.destroyLevel();
+                levelManager.makeLevel();
+                retried = true;
+                introStop = Util::calculateTimeTo(1500ms);
+            } else {
+                SDL_Delay(3000);
+                break;
+            }
+        }
+
         Keyboard::handleInput();
-        levelManager.ball->move();
+        if(std::chrono::high_resolution_clock::now() > introStop)
+            levelManager.ball->move();
 
 
         SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
