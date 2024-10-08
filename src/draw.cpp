@@ -7,7 +7,7 @@
 
 #include "Draw.hpp"
 
-#include "HyperBlock.hpp"
+#include "Displayed/Blocks/HyperBlock.hpp"
 #include "Texture.hpp"
 
 SDL_Renderer* Draw::renderer;

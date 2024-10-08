@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "HyperBlock.hpp"
+#include "Displayed/Blocks/HyperBlock.hpp"
 #include "Rectangle.hpp"
 #include "Options.hpp"
 

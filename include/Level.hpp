@@ -3,12 +3,12 @@
 #include <SDL2/SDL.h>
 
 #include "AudioManager.hpp"
-#include "Ball.hpp"
+#include "Displayed/Ball.hpp"
+#include "Displayed/Paddle.hpp"
+#include "Displayed/Blocks/HyperBlock.hpp"
 #include "DrawRegistry.hpp"
-#include "HyperBlock.hpp"
 #include "Keyboard.hpp"
 #include "Options.hpp"
-#include "Paddle.hpp"
 #include "ScoreKeeper.hpp"
 
 

@@ -6,9 +6,9 @@
 #include <tuple>
 #include <utility>
 
-#include "Block.hpp"
-#include "Row.hpp"
-#include "HyperBlock.hpp"
+#include "Displayed/Blocks/Block.hpp"
+#include "Displayed/Blocks/Row.hpp"
+#include "Displayed/Blocks/HyperBlock.hpp"
 #include "DrawRegistry.hpp"
 #include "Options.hpp"
 

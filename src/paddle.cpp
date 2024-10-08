@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 
-#include "Paddle.hpp"
-#include "HyperBlock.hpp"
+#include "Displayed/Paddle.hpp"
+#include "Displayed/Blocks/HyperBlock.hpp"
 #include "Rectangle.hpp"
 #include "RenderWindow.hpp"
 

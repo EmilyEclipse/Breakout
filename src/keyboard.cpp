@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 
 #include "Keyboard.hpp"
-#include "Paddle.hpp"
+#include "Displayed/Paddle.hpp"
 
 Paddle* Keyboard::paddle;
 const Uint8* Keyboard::keyboardState = SDL_GetKeyboardState(NULL);

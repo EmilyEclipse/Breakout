@@ -5,7 +5,7 @@
 
 #include "AudioManager.hpp"
 #include "Rectangle.hpp"
-#include "HyperBlock.hpp"
+#include "Displayed/Blocks/HyperBlock.hpp"
 #include "Geometry.hpp"
 #include "Paddle.hpp"
 #include "ScoreKeeper.hpp"

@@ -1,14 +1,13 @@
 #include <SDL2/SDL.h>
-
 #include <iterator>
 
-#include "Ball.hpp"
+#include "Displayed/Ball.hpp"
+#include "Displayed/Paddle.hpp"
 #include "Rectangle.hpp"
-#include "Paddle.hpp"
+
 #include "ScoreKeeper.hpp"
 #include "Options.hpp"
 #include "Util.hpp"
-
 #include "Draw.hpp"
 
 
